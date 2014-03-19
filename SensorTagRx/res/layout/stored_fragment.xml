@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    style="@style/SmallMargins" >
+
+    <LinearLayout
+        android:id="@+id/DeleteAllCard"
+        android:background="@drawable/card_no_border"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content" >
+    	
+        <LinearLayout
+            style="@style/SmallMargins"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="bottom" >
+    		
+            <Button
+		        android:id="@+id/delete_all_button"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:text="@string/stored_delete_all_logs" />
+		    
+		   </LinearLayout>
+	    
+	</LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/DeleteAllCard"
+        android:layout_marginBottom="@dimen/activity_small_vertical_margin"
+        android:background="@drawable/card_no_border" >
+    	
+        <RelativeLayout
+            style="@style/SmallMargins"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/stored_more_options"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <ListView
+                android:id="@+id/logs_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/textView1"
+                android:layout_below="@id/text1"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:text="@string/stored_note"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </RelativeLayout>
+    		
+    </LinearLayout>
+    
+</RelativeLayout>

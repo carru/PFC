@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <PreferenceCategory
+        android:title="@string/category_general" >
+    
+	    <CheckBoxPreference
+	        android:key="key_auto_scan"
+	        android:title="@string/auto_scan"
+	        android:summary="@string/auto_scan_summary"
+	        android:defaultValue="false" />
+	    
+	    <CheckBoxPreference
+	        android:key="key_capture_in_background"
+	        android:title="@string/capture_in_background"
+	        android:summary="@string/capture_in_background_summary"
+	        android:defaultValue="false" />
+	    
+	    <CheckBoxPreference
+	        android:key="key_foreground"
+	        android:title="@string/service_in_foreground"
+	        android:summary="@string/service_in_foreground_summary"
+	        android:defaultValue="false" />
+    
+    </PreferenceCategory>
+    
+    <PreferenceCategory
+        android:title="@string/category_favourites" >
+    
+	    <CheckBoxPreference
+	        android:key="key_favourites_system"
+	        android:title="@string/favourites_system"
+	        android:summary="@string/favourites_system_summary"
+	        android:defaultValue="false" />
+	    
+	    <Preference
+	        android:key="key_clear_favourites"
+	        android:title="@string/clear_favourites" />
+    
+    </PreferenceCategory>
+    
+</PreferenceScreen>

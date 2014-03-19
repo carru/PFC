@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SensorTagRx</string>
+    
+    <!-- Reusable -->
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="none"></string>
+    
+	<!-- Navigation Drawer -->
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string-array name="drawer_titles">
+        <item>Device Scan</item>
+        <item>Live Data</item>
+        <item>Capture</item>
+        <item>Stored Logs</item>
+        <item>Settings</item>
+    </string-array>
+    <array name="drawer_icons">
+        <item>@drawable/ic_action_search</item>
+        <item>@drawable/ic_action_download</item>
+        <item>@drawable/ic_action_save</item>
+        <item>@drawable/ic_action_copy</item>
+        <item>@drawable/ic_action_settings</item>
+    </array>
+    
+    <!-- BleService -->
+    <string name="error_fs_not_writable">Can\'t write log file. Filesystem not writable.</string>
+    
+    <!-- Device Scan fragment -->
+    <string name="state">Status:</string>
+    <string name="device_name">Device name:</string>
+    <string name="device_address">Device address:</string>
+    <string name="connected">Connected</string>
+    <string name="connecting">Connecting</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="scanning">Scanning</string>
+    <string name="scan">Scan</string>
+    <string name="stop">Stop</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="unknown_device">Unknown device</string>
+    <string name="text1">Scanning results will appear here:</string>
+    <string name="text2">Device name and address</string>
+    <string name="text3">RSSI</string>
+    <string name="text4">Scanning will disconnect from current device</string>
+    <string name="connect_failed">Could not connect to BT device</string>
+    
+    <!-- Live Data fragment -->
+    <string name="accelerometer">Accelerometer</string>
+    <string name="magnetometer">Magnetometer</string>
+    <string name="gyroscope">Gyroscope</string>
+    <string name="x">x:</string>
+    <string name="y">y:</string>
+    <string name="z">z:</string>
+    <string name="accelerometer_unit">g</string>
+    <string name="magnetometer_unit">uT</string>
+    <string name="gyroscope_unit">deg/s</string>
+    <string name="calibrate">Calibrate</string>
+    
+    <!-- Capture fragment -->
+    <string name="logging_status">Logger status:</string>
+    <string name="logging">Enabled</string>
+    <string name="not_logging">Disabled</string>
+    <string name="start_log">Start new log</string>
+    <string name="stop_log">Stop logger</string>
+    <string name="more_info">Additional information</string>
+    <string name="start_time">Start time:</string>
+    <string name="runtime">Runtime:</string>
+    <string name="captured_samples">Captured samples:</string>
+    <string name="log_filename">File name:</string>
+    <string name="file_location">Log files are stored in the default AppData folder in external storage</string>
+    <string name="error_not_connected">Can\'t start logger, no device connected</string>
+    <!-- Capture fragment, dialog box -->
+    <string name="capture_dialog_title">Log file name</string>
+    <string name="capture_dialog_message">Enter a name for the new log file. Leave blank for default name.</string>
+    <string name="capture_dialog_accept">Accept</string>
+    <string name="capture_dialog_cancel">Cancel</string>
+    
+    <!-- Stored fragment -->
+    <string name="stored_more_options">List of logs stored on this device</string>
+    <string name="stored_delete_all_logs">Delete all logs</string>
+    <string name="stored_all_logs_deleted">All logs deleted</string>
+    <string name="stored_note">Note: if there is a log being written (capturing), it is not shown here</string>
+    <string name="stored_share">Share</string>
+    <string name="stored_delete">Delete</string>
+    <string name="stored_delete_all_logs_dialog">Are you sure you want to delete all logs?</string>
+    <string name="stored_delete_log_dialog">Are you sure you want to delete</string> <!-- then we attach the log name and '?' -->
+    <string name="stored_share_intent_title">Share</string> <!-- also attach log name -->
+    
+    <!-- Settings fragment -->
+    <string name="category_general">General</string>
+    <string name="category_favourites">Favourite system [NOT YET IMPLEMENTED]</string>
+    <string name="auto_scan">Scan on startup</string>
+    <string name="auto_scan_summary">Automtically perfom a device scan when app starts</string>
+    <string name="capture_in_background">Keep logger alive</string>
+    <string name="capture_in_background_summary">[NOT YET IMPLEMENTED] Allow logger to continue capturing samples when you close this app</string>
+    <string name="service_in_foreground">Run service in foreground</string>
+    <string name="service_in_foreground_summary">[NOT YET IMPLEMENTED] This shows an ongoing notification and the service is less likely to be killed by the system</string>
+    <string name="favourites_system">Favourite devices</string>
+    <string name="favourites_system_summary">Connect automatically to favourite devices</string>
+    <string name="clear_favourites">Clear list of favourite devices</string>
+    <string name="favourites_cleared">Favourites cleared</string>
+
+</resources>

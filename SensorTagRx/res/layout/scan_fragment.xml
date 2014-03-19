@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/SmallMargins"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:id="@+id/ScanCard"
+        android:background="@drawable/card_no_border"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content" >
+    	
+        <LinearLayout
+            style="@style/SmallMargins"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="bottom" >
+    		
+            <Button
+		        android:id="@+id/scan_button"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:text="@string/scan" />
+            
+		    <TextView
+		        android:id="@+id/TextView5"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:gravity="center"
+		        android:text="@string/text4"
+		        android:textAppearance="?android:attr/textAppearanceSmall" />
+		    
+		   </LinearLayout>
+	    
+	</LinearLayout>
+    
+    <Space
+        android:id="@+id/Space3"
+        android:layout_width="wrap_content"
+        android:layout_above="@id/ScanCard"
+        android:layout_height="@dimen/activity_small_vertical_margin" />
+    
+    <!-- Card -->
+    <LinearLayout
+        android:id="@+id/StatusCard"
+        android:background="@drawable/card_no_border"
+        android:layout_width="wrap_content"
+    	android:layout_height="wrap_content" >
+    	
+        <!-- Items inside the card -->
+        <RelativeLayout
+            style="@style/SmallMargins"
+            android:layout_width="wrap_content"
+    		android:layout_height="wrap_content" >
+    		
+            <TextView
+        		android:id="@+id/TextView1"
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:textAppearance="?android:attr/textAppearanceMedium"
+        		android:text="@string/state" />
+
+    		<TextView
+        		android:id="@+id/connection_state"
+       			android:layout_width="match_parent"
+        		android:layout_height="wrap_content"
+        		android:layout_toRightOf="@id/TextView1"
+        		android:gravity="right"
+        		android:textAppearance="?android:attr/textAppearanceMedium"
+        		android:text="@string/disconnected" />
+
+    		<TextView
+        		android:id="@+id/TextView2"
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:layout_below="@id/TextView1"
+        		android:textAppearance="?android:attr/textAppearanceMedium"
+        		android:text="@string/device_name" />
+    		
+    		<TextView
+        		android:id="@+id/device_name"
+       			android:layout_width="match_parent"
+        		android:layout_height="wrap_content"
+        		android:layout_toRightOf="@id/TextView2"
+        		android:layout_below="@id/TextView1"
+        		android:gravity="right"
+        		android:textAppearance="?android:attr/textAppearanceMedium" />
+    		
+    		<TextView
+        		android:id="@+id/TextView3"
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:layout_below="@id/TextView2"
+        		android:textAppearance="?android:attr/textAppearanceMedium"
+        		android:text="@string/device_address" />
+    		
+    		<TextView
+        		android:id="@+id/device_address"
+       			android:layout_width="match_parent"
+        		android:layout_height="wrap_content"
+        		android:layout_toRightOf="@id/TextView3"
+        		android:layout_below="@id/TextView2"
+        		android:gravity="right"
+        		android:textAppearance="?android:attr/textAppearanceMedium" />
+    		
+    		<Button
+		        android:id="@+id/disconnect_button"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_below="@id/TextView3"
+		        android:visibility="gone"
+		        android:text="@string/disconnect" />
+    		
+        </RelativeLayout>
+        
+    </LinearLayout>
+    
+    <Space
+        android:id="@+id/Space1"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/StatusCard"
+        android:layout_height="@dimen/activity_small_vertical_margin" />
+    
+    <LinearLayout
+        android:id="@+id/ListCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/Space3"
+        android:layout_below="@id/Space1"
+        android:background="@drawable/card_no_border" >
+        
+        <RelativeLayout
+            style="@style/SmallMargins"
+            android:layout_width="wrap_content"
+    		android:layout_height="wrap_content" >
+    		
+	        <TextView
+	        	android:id="@+id/TextView4"
+	        	android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentTop="true"
+		        android:gravity="center"
+		        android:textAppearance="?android:attr/textAppearanceMedium"
+		        android:text="@string/text1" />
+	        
+	        <Space
+		        android:id="@+id/Space2"
+		        android:layout_width="wrap_content"
+		        android:layout_below="@id/TextView4"
+		        android:layout_height="@dimen/activity_small_vertical_margin" />
+	    
+		    <TextView
+		        android:id="@+id/TextView20"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_below="@id/Space2"
+		        android:textAppearance="?android:attr/textAppearanceMedium"
+		        android:text="@string/text2" />
+		    
+		    <TextView
+		        android:id="@+id/TextView30"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_alignBottom="@id/TextView20"
+		        android:gravity="right"
+		        android:textAppearance="?android:attr/textAppearanceMedium"
+		        android:text="@string/text3" />
+		    
+		    <ListView
+		        android:id="@+id/device_list"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentBottom="true"
+		        android:layout_below="@id/TextView30"
+		        android:layout_centerHorizontal="true" >
+		    </ListView>
+	    
+        </RelativeLayout>    
+            
+        
+    
+    </LinearLayout>
+    
+    
+
+</RelativeLayout>

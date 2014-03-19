@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    style="@style/SmallMargins" >
+
+    <!-- Card -->
+    <LinearLayout
+        android:background="@drawable/card_no_border"
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content" >
+    	
+        <!-- Items inside the card -->
+        <LinearLayout
+            style="@style/SmallMargins"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+    		android:layout_height="wrap_content" >
+    		
+            <TextView
+                style="@style/SensorName"
+                android:text="@string/accelerometer" />
+            
+            <Space style="@style/SensorNameSeparatorSpace" />
+            
+            <LinearLayout
+                style="@style/LiveDataMargins"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
+                
+                <TextView
+                    style="@style/Axis"
+                    android:text="@string/x" />
+                
+                <TextView
+                    style="@style/Data"
+                    android:id="@+id/live_accelerometer_x" />
+                
+                <TextView
+                    style="@style/Units"
+                    android:text="@string/accelerometer_unit" />
+                
+            </LinearLayout>
+            
+            <LinearLayout
+                style="@style/LiveDataMargins"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
+                
+                <TextView
+                    style="@style/Axis"
+                    android:text="@string/y" />
+                
+                <TextView
+                    style="@style/Data"
+                    android:id="@+id/live_accelerometer_y" />
+                
+                <TextView
+                    style="@style/Units"
+                    android:text="@string/accelerometer_unit" />
+                
+            </LinearLayout>
+            
+            <LinearLayout
+                style="@style/LiveDataMargins"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
+                
+                <TextView
+                    style="@style/Axis"
+                    android:text="@string/z" />
+                
+                <TextView
+                    style="@style/Data"
+                    android:id="@+id/live_accelerometer_z" />
+                
+                <TextView
+                    style="@style/Units"
+                    android:text="@string/accelerometer_unit" />
+                
+            </LinearLayout>
+            
+            <Space style="@style/SensorNameSeparatorSpace" />
+    		
+        </LinearLayout>
+    		
+    </LinearLayout>
+    
+    <Space style="@style/SensorNameSeparatorSpace" />
+    
+    <!-- Card -->
+    <LinearLayout
+        android:background="@drawable/card_no_border"
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content" >
+    	
+        <!-- Items inside the card -->
+        <LinearLayout
+            style="@style/SmallMargins"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+    		android:layout_height="wrap_content" >
+    		
+            <TextView
+                style="@style/SensorName"
+                android:text="@string/magnetometer" />
+            
+            <Space style="@style/SensorNameSeparatorSpace" />
+            
+            <LinearLayout
+                style="@style/LiveDataMargins"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
+                
+                <TextView
+                    style="@style/Axis"
+                    android:text="@string/x" />
+                
+                <TextView
+                    style="@style/Data"
+                    android:id="@+id/live_magnetometer_x" />
+                
+                <TextView
+                    style="@style/Units"
+                    android:text="@string/magnetometer_unit" />
+                
+            </LinearLayout>
+            
+            <LinearLayout
+                style="@style/LiveDataMargins"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
+                
+                <TextView
+                    style="@style/Axis"
+                    android:text="@string/y" />
+                
+                <TextView
+                    style="@style/Data"
+                    android:id="@+id/live_magnetometer_y" />
+                
+                <TextView
+                    style="@style/Units"
+                    android:text="@string/magnetometer_unit" />
+                
+            </LinearLayout>
+            
+            <LinearLayout
+                style="@style/LiveDataMargins"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
+                
+                <TextView
+                    style="@style/Axis"
+                    android:text="@string/z" />
+                
+                <TextView
+                    style="@style/Data"
+                    android:id="@+id/live_magnetometer_z" />
+                
+                <TextView
+                    style="@style/Units"
+                    android:text="@string/magnetometer_unit" />
+                
+            </LinearLayout>
+    		
+            <Space style="@style/SensorNameSeparatorSpace" />
+            
+            <Button
+		        android:id="@+id/calibrate_button"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:text="@string/calibrate" />
+            
+        </LinearLayout>
+    		
+    </LinearLayout>
+    
+    <Space style="@style/SensorNameSeparatorSpace" />
+    
+    <!-- Card -->
+    <LinearLayout
+        android:background="@drawable/card_no_border"
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content" >
+    	
+        <!-- Items inside the card -->
+        <LinearLayout
+            style="@style/SmallMargins"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+    		android:layout_height="wrap_content" >
+    		
+            <TextView
+                style="@style/SensorName"
+                android:text="@string/gyroscope" />
+            
+            <Space style="@style/SensorNameSeparatorSpace" />
+            
+            <LinearLayout
+                style="@style/LiveDataMargins"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
+                
+                <TextView
+                    style="@style/Axis"
+                    android:text="@string/x" />
+                
+                <TextView
+                    style="@style/Data"
+                    android:id="@+id/live_gyroscope_x" />
+                
+                <TextView
+                    style="@style/Units"
+                    android:text="@string/gyroscope_unit" />
+                
+            </LinearLayout>
+            
+            <LinearLayout
+                style="@style/LiveDataMargins"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
+                
+                <TextView
+                    style="@style/Axis"
+                    android:text="@string/y" />
+                
+                <TextView
+                    style="@style/Data"
+                    android:id="@+id/live_gyroscope_y" />
+                
+                <TextView
+                    style="@style/Units"
+                    android:text="@string/gyroscope_unit" />
+                
+            </LinearLayout>
+            
+            <LinearLayout
+                style="@style/LiveDataMargins"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
+                
+                <TextView
+                    style="@style/Axis"
+                    android:text="@string/z" />
+                
+                <TextView
+                    style="@style/Data"
+                    android:id="@+id/live_gyroscope_z" />
+                
+                <TextView
+                    style="@style/Units"
+                    android:text="@string/gyroscope_unit" />
+                
+            </LinearLayout>
+    		
+            <Space style="@style/SensorNameSeparatorSpace" />
+            
+        </LinearLayout>
+    		
+    </LinearLayout>
+
+</LinearLayout>
