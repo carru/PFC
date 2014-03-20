@@ -21,6 +21,7 @@ import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -100,7 +101,7 @@ public class CaptureFragment extends Fragment {
 	
 	private void askForFileName() {
 		final EditText input = new EditText(getActivity());
-		new AlertDialog.Builder(getActivity())
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
 	    .setMessage(getString(R.string.capture_dialog_message))
 	    .setView(input)
 	    .setPositiveButton(getString(R.string.capture_dialog_accept), new DialogInterface.OnClickListener() {
@@ -117,7 +118,12 @@ public class CaptureFragment extends Fragment {
 		        	startLogger(filename);
 	        	}
 	        }
-	    }).setNegativeButton(getString(R.string.capture_dialog_cancel), null).show();
+	    }).setNegativeButton(getString(R.string.capture_dialog_cancel), null);
+		
+		// This opens the keyboard when the dialog shows
+		AlertDialog alertToShow = builder.create();
+		alertToShow.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+		alertToShow.show();
 	}
 	
 	private void askForConfirmationAndStartLogger(final String fileName) {
