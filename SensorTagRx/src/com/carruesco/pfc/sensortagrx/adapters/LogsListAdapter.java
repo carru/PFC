@@ -2,6 +2,7 @@ package com.carruesco.pfc.sensortagrx.adapters;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -60,6 +61,9 @@ public class LogsListAdapter extends BaseAdapter {
 			}
 		}
 
+		// Sort alphabetically
+		Collections.sort(list);
+		
 		notifyDataSetChanged();
 	}
 
