@@ -72,11 +72,11 @@
     <string name="log_filename">File name:</string>
     <string name="file_location">Log files are stored in the default AppData folder in external storage</string>
     <string name="error_not_connected">Can\'t start logger, no device connected</string>
-    <!-- Capture fragment, dialog box -->
-    <string name="capture_dialog_title">Log file name</string>
+    <!-- Capture fragment, dialog boxes -->
     <string name="capture_dialog_message">Enter a name for the new log file. Leave blank for default name.</string>
     <string name="capture_dialog_accept">Accept</string>
     <string name="capture_dialog_cancel">Cancel</string>
+    <string name="capture_dialog_overwrite">This file already exists. Overwrite?</string>
     
     <!-- Stored fragment -->
     <string name="stored_more_options">List of logs stored on this device</string>

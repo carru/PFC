@@ -1,5 +1,6 @@
 package com.carruesco.pfc.sensortagrx.fragments;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import com.carruesco.pfc.sensortagrx.BleService;
@@ -69,6 +70,72 @@ public class CaptureFragment extends Fragment {
 		logButton = (Button) v.findViewById(R.id.capture_logger_button);
 	}
 	
+	@SuppressLint("DefaultLocale")
+	private void startLogger(String filename) {
+		boolean success;
+		if (filename.isEmpty()) {success = Common.mService.startLogger(); }
+		else { success = Common.mService.startLogger(filename); }
+		
+		if (success) {
+			logButton.setText(R.string.stop_log);
+	    	mLoggerStatus.setText(R.string.logging);
+	    	
+	    	// Fill additional information details
+	    	if (filename.isEmpty()) { filename = Common.mService.getLoggerFileName(); }
+	    	
+	    	Time start = Common.mService.getLoggerStartTime();
+	    	String startString = String.format("%02d:%02d:%02d",start.hour,start.minute,start.second);
+	    	
+	    	mFileName.setText(filename + ".log");
+	    	mLogStartTime.setText(startString);
+	    	mLogRuntime.setText("00:00:00");
+	    	mLogSamples.setText("0");
+	    	
+	    	startRefreshingInfo();
+		}
+		else {
+			Toast.makeText(getActivity(), R.string.error_fs_not_writable, Toast.LENGTH_LONG).show();
+		}
+	}
+	
+	private void askForFileName() {
+		final EditText input = new EditText(getActivity());
+		new AlertDialog.Builder(getActivity())
+	    .setMessage(getString(R.string.capture_dialog_message))
+	    .setView(input)
+	    .setPositiveButton(getString(R.string.capture_dialog_accept), new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int whichButton) {
+	        	String filename = input.getText().toString();
+	        	
+	        	// Does the file already exist?
+	        	if (checkFileExists(filename)) {
+	        		// Ask for confirmation to overwrite
+	        		askForConfirmationAndStartLogger(filename);
+	        	}
+	        	else {
+	        		// Start logging
+		        	startLogger(filename);
+	        	}
+	        }
+	    }).setNegativeButton(getString(R.string.capture_dialog_cancel), null).show();
+	}
+	
+	private void askForConfirmationAndStartLogger(final String fileName) {
+		new AlertDialog.Builder(getActivity())
+	    .setMessage(getString(R.string.capture_dialog_overwrite))
+	    .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int whichButton) {
+	        	// Start logging
+	        	startLogger(fileName);
+	        }
+	    }).setNegativeButton(getString(R.string.no), null).show();
+	}
+	
+	private boolean checkFileExists(String fileName) {
+		File file = new File(getActivity().getExternalFilesDir(null), fileName + ".log");
+		return file.exists();
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.capture_fragment, container, false);
@@ -78,7 +145,6 @@ public class CaptureFragment extends Fragment {
 		mFileLocation.setText(getString(R.string.file_location) + " (" + getActivity().getExternalFilesDir(null) + ")");
 		
 		logButton.setOnClickListener(new View.OnClickListener() {
-		    @SuppressLint("DefaultLocale")
 			public void onClick(View v) {
 		    	if (Common.mService.isLogging()) {
 		    		stopRefreshingInfo();
@@ -95,42 +161,7 @@ public class CaptureFragment extends Fragment {
 		    		}
 		    		
 		    		// Ask user for file name
-		    		final EditText input = new EditText(getActivity());
-		    		new AlertDialog.Builder(getActivity())
-		    		.setTitle(getString(R.string.capture_dialog_title))
-		    	    .setMessage(getString(R.string.capture_dialog_message))
-		    	    .setView(input)
-		    	    .setPositiveButton(getString(R.string.capture_dialog_accept), new DialogInterface.OnClickListener() {
-		    	        public void onClick(DialogInterface dialog, int whichButton) {
-		    	        	// Start logging
-		    	        	String filename = input.getText().toString();
-		    	        	
-		    	        	boolean success;
-				    		if (filename.isEmpty()) {success = Common.mService.startLogger(); }
-				    		else { success = Common.mService.startLogger(filename); }
-				    		
-				    		if (success) {
-				    			logButton.setText(R.string.stop_log);
-						    	mLoggerStatus.setText(R.string.logging);
-						    	
-						    	// Fill additional information details
-						    	if (filename.isEmpty()) { filename = Common.mService.getLoggerFileName(); }
-						    	
-						    	Time start = Common.mService.getLoggerStartTime();
-						    	String startString = String.format("%02d:%02d:%02d",start.hour,start.minute,start.second);
-						    	
-						    	mFileName.setText(filename + ".log");
-						    	mLogStartTime.setText(startString);
-						    	mLogRuntime.setText("00:00:00");
-						    	mLogSamples.setText("0");
-						    	
-						    	startRefreshingInfo();
-				    		}
-				    		else {
-				    			Toast.makeText(getActivity(), R.string.error_fs_not_writable, Toast.LENGTH_LONG).show();
-				    		}
-		    	        }
-		    	    }).setNegativeButton(getString(R.string.capture_dialog_cancel), null).show();
+		    		askForFileName();
 		    	}
 		    }
 		});
