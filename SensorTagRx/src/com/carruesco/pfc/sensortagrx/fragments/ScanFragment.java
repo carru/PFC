@@ -1,17 +1,22 @@
 package com.carruesco.pfc.sensortagrx.fragments;
 
+import java.util.ArrayList;
+
 import com.carruesco.pfc.sensortagrx.BleService;
 import com.carruesco.pfc.sensortagrx.Common;
+import com.carruesco.pfc.sensortagrx.FavouritesList;
 import com.carruesco.pfc.sensortagrx.R;
 import com.carruesco.pfc.sensortagrx.adapters.LeDeviceListAdapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -52,6 +57,10 @@ public class ScanFragment extends Fragment {
     // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 10000;
     
+    // Favourite devices list
+    private ArrayList<String> list;
+    private boolean listHasBeenModified = false;
+    
 	// Empty constructor required for fragment subclasses
 	public ScanFragment() {}
 	
@@ -74,6 +83,31 @@ public class ScanFragment extends Fragment {
         }
     }
 	
+	private void initiateConnection(BluetoothDevice device) {
+		if (device == null) return;
+        
+        // Stop scanning
+        scanLeDevice(false);
+        
+        // Disconnect from current device
+        if (Common.isConnected) { Common.disconnect(); }
+        
+        // Get selected device properties
+        Common.deviceName = device.getName();
+        Common.deviceAddress = device.getAddress();
+        
+        // Connect
+        if (Common.connect()) {
+        	mLeDeviceListAdapter.clear();
+        	mLeDeviceListAdapter.notifyDataSetChanged();
+        	
+        	// Update UI
+        	setUi(CONNECTING);
+        } else {
+        	Toast.makeText(getActivity(), R.string.connect_failed, Toast.LENGTH_LONG).show();
+        }
+	}
+	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.scan_fragment, container, false);
@@ -89,29 +123,12 @@ public class ScanFragment extends Fragment {
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
-				final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
-		        if (device == null) return;
-		        
-		        // Stop scanning
-		        scanLeDevice(false);
-		        
-		        // Disconnect from current device
-		        if (Common.isConnected) { Common.disconnect(); }
-		        
-		        // Get selected device properties
-		        Common.deviceName = device.getName();
-		        Common.deviceAddress = device.getAddress();
-		        
-		        // Connect
-		        if (Common.connect()) {
-		        	mLeDeviceListAdapter.clear();
-		        	mLeDeviceListAdapter.notifyDataSetChanged();
-		        	
-		        	// Update UI
-		        	setUi(CONNECTING);
-		        } else {
-		        	Toast.makeText(getActivity(), R.string.connect_failed, Toast.LENGTH_LONG).show();
-		        }
+				initiateConnection(mLeDeviceListAdapter.getDevice(position));
+				
+				// Ask to include device in favourites
+				if (Common.sharedPref.getBoolean("key_favourites_system", false)) {
+					askToIncludeInFavourites();
+				}
 			}
 		});
 		
@@ -143,6 +160,18 @@ public class ScanFragment extends Fragment {
 		return rootView;
     }
 	
+	private void askToIncludeInFavourites() {
+		new AlertDialog.Builder(getActivity())
+	    .setMessage(getString(R.string.add_device_to_favourites))
+	    .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int whichButton) {
+	        	// Add device to favourites
+	        	list.add(Common.deviceAddress);
+	        	listHasBeenModified = true;
+	        }
+	    }).setNegativeButton(getString(R.string.no), null).show();
+	}
+	
 	@Override
 	public void onResume() {
         super.onResume();
@@ -157,6 +186,11 @@ public class ScanFragment extends Fragment {
             }
         }
 
+        // Get list of favourites
+        if (Common.sharedPref.getBoolean("key_favourites_system", false)) {
+        	list = FavouritesList.getList(Common.sharedPref);
+        }
+        
         // Initializes list view adapter.
         mLeDeviceListAdapter = new LeDeviceListAdapter(getActivity());
         mListView.setAdapter(mLeDeviceListAdapter);
@@ -185,7 +219,9 @@ public class ScanFragment extends Fragment {
         super.onPause();
         if (mScanning) { scanLeDevice(false); }
         unRegisterReciever();
-        //mLeDeviceListAdapter.clear();
+
+        // Save favourites list if it has been modified
+        if (listHasBeenModified) { FavouritesList.save(Common.sharedPref, list); }
     }
     
     private void scanLeDevice(final boolean enable) {
@@ -271,6 +307,11 @@ public class ScanFragment extends Fragment {
     	}
     }
     
+    private boolean isFavourite(BluetoothDevice device) {
+    	if (list == null) { return false; }
+    	return list.contains(device.getAddress());
+    }
+    
     // Device scan callback.
     private BluetoothAdapter.LeScanCallback mLeScanCallback =
             new BluetoothAdapter.LeScanCallback() {
@@ -282,6 +323,15 @@ public class ScanFragment extends Fragment {
                 public void run() {
                 	mLeDeviceListAdapter.addDevice(device, rssi);
                     mLeDeviceListAdapter.notifyDataSetChanged();
+                    
+                    // Is favourite system enabled?
+                    if (Common.sharedPref.getBoolean("key_favourites_system", false)) {
+                    	// If device is on the favourites list, connect
+                    	if (isFavourite(device)) {
+                    		initiateConnection(device);
+                    		Toast.makeText(getActivity(), R.string.connected_to_favourite, Toast.LENGTH_LONG).show();
+                    	}
+                    }
                 }
             });
         }

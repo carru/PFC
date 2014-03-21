@@ -1,5 +1,7 @@
 package com.carruesco.pfc.sensortagrx.fragments;
 
+import com.carruesco.pfc.sensortagrx.Common;
+import com.carruesco.pfc.sensortagrx.FavouritesList;
 import com.carruesco.pfc.sensortagrx.R;
 
 import android.os.Bundle;
@@ -19,8 +21,13 @@ public class SettingsFragment extends PreferenceFragment {
         clearFavourites.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference arg0) { 
-                            //TODO
-                        	Toast.makeText(getActivity(), R.string.favourites_cleared, Toast.LENGTH_SHORT).show();
+                        	if (FavouritesList.clear(Common.sharedPref)) {
+                        		Toast.makeText(getActivity(), R.string.favourites_cleared, Toast.LENGTH_SHORT).show();
+                        	}
+                        	else {
+                        		Toast.makeText(getActivity(), R.string.favourites_cleared_error, Toast.LENGTH_SHORT).show();
+                        	}
+                        	
                             return true;
                         }
         });

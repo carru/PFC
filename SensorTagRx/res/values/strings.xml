@@ -46,6 +46,8 @@
     <string name="text3">RSSI</string>
     <string name="text4">Scanning will disconnect from current device</string>
     <string name="connect_failed">Could not connect to BT device</string>
+    <string name="connected_to_favourite">Found a favourite device, connecting.</string>
+    <string name="add_device_to_favourites">Do you want to add this device to the favourites list?</string>
     
     <!-- Live Data fragment -->
     <string name="accelerometer">Accelerometer</string>
@@ -91,7 +93,7 @@
     
     <!-- Settings fragment -->
     <string name="category_general">General</string>
-    <string name="category_favourites">Favourite system [NOT YET IMPLEMENTED]</string>
+    <string name="category_favourites">Favourite system</string>
     <string name="auto_scan">Scan on startup</string>
     <string name="auto_scan_summary">Automtically perfom a device scan when app starts</string>
     <string name="capture_in_background">Keep logger alive</string>
@@ -99,8 +101,9 @@
     <string name="service_in_foreground">Run service in foreground</string>
     <string name="service_in_foreground_summary">[NOT YET IMPLEMENTED] This shows an ongoing notification and the service is less likely to be killed by the system</string>
     <string name="favourites_system">Favourite devices</string>
-    <string name="favourites_system_summary">Connect automatically to favourite devices</string>
+    <string name="favourites_system_summary">Connect automatically to favourite devices when scanning</string>
     <string name="clear_favourites">Clear list of favourite devices</string>
     <string name="favourites_cleared">Favourites cleared</string>
+    <string name="favourites_cleared_error">Error clearing favourites</string>
 
 </resources>
