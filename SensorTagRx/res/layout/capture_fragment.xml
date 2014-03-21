@@ -118,69 +118,73 @@
 		            android:textAppearance="?android:attr/textAppearanceLarge" />
 		        
 		        <TextView
-		        	android:id="@+id/capture_TextView8"
-		       		android:layout_width="match_parent"
-		        	android:layout_height="wrap_content"
-		        	android:layout_below="@id/capture_more_info"
-		        	android:text="@string/log_filename"
-		        	android:textAppearance="?android:attr/textAppearanceMedium" />
+		            android:id="@+id/capture_TextView8"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_below="@id/capture_more_info"
+		            android:text="@string/log_filename"
+		            android:textAppearance="?android:attr/textAppearanceMedium" />
 		        
 		        <TextView
-	        		android:id="@+id/capture_log_filename"
-	       			android:layout_width="match_parent"
-	        		android:layout_height="wrap_content"
-	        		android:layout_below="@id/capture_more_info"
-	        		android:gravity="right"
-	        		android:textAppearance="?android:attr/textAppearanceMedium" />
+		            android:id="@+id/capture_log_filename"
+		            android:layout_width="fill_parent"
+		            android:layout_height="wrap_content"
+		            android:layout_below="@id/capture_more_info"
+		            android:layout_toRightOf="@+id/capture_TextView8"
+		            android:gravity="right"
+		            android:textAppearance="?android:attr/textAppearanceMedium" />
 		        
 		        <TextView
-		        	android:id="@+id/capture_TextView5"
-		       		android:layout_width="match_parent"
-		        	android:layout_height="wrap_content"
-		        	android:layout_below="@id/capture_TextView8"
-		        	android:text="@string/start_time"
-		        	android:textAppearance="?android:attr/textAppearanceMedium" />
+		            android:id="@+id/capture_TextView5"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_below="@id/capture_log_filename"
+		            android:text="@string/start_time"
+		            android:textAppearance="?android:attr/textAppearanceMedium" />
 		        
 		        <TextView
-	        		android:id="@+id/capture_start_time"
-	       			android:layout_width="match_parent"
-	        		android:layout_height="wrap_content"
-	        		android:layout_below="@id/capture_TextView8"
-	        		android:gravity="right"
-	        		android:textAppearance="?android:attr/textAppearanceMedium" />
+		            android:id="@+id/capture_start_time"
+		            android:layout_width="fill_parent"
+		            android:layout_height="wrap_content"
+		            android:layout_below="@id/capture_log_filename"
+		            android:layout_toRightOf="@id/capture_TextView5"
+		            android:gravity="right"
+		            android:textAppearance="?android:attr/textAppearanceMedium" />
 		        
 		        <TextView
-		        	android:id="@+id/capture_TextView6"
-		       		android:layout_width="match_parent"
-		        	android:layout_height="wrap_content"
-		        	android:layout_below="@id/capture_TextView5"
-		        	android:text="@string/runtime"
-		        	android:textAppearance="?android:attr/textAppearanceMedium" />
+		            android:id="@+id/capture_TextView6"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_below="@id/capture_start_time"
+		            android:text="@string/runtime"
+		            android:textAppearance="?android:attr/textAppearanceMedium" />
 		        
 		        <TextView
-	        		android:id="@+id/capture_runtime"
-	       			android:layout_width="match_parent"
-	        		android:layout_height="wrap_content"
-	        		android:layout_below="@id/capture_TextView5"
-	        		android:gravity="right"
-	        		android:textAppearance="?android:attr/textAppearanceMedium" />
+		            android:id="@+id/capture_runtime"
+		            android:layout_width="fill_parent"
+		            android:layout_height="wrap_content"
+		            android:layout_below="@id/capture_start_time"
+		            android:layout_toRightOf="@id/capture_TextView6"
+		            android:gravity="right"
+		            android:textAppearance="?android:attr/textAppearanceMedium" />
 		        
 		        <TextView
-		        	android:id="@+id/capture_TextView7"
-		       		android:layout_width="match_parent"
-		        	android:layout_height="wrap_content"
-		        	android:layout_below="@id/capture_TextView6"
-		        	android:text="@string/captured_samples"
-		        	android:textAppearance="?android:attr/textAppearanceMedium" />
+		            android:id="@+id/capture_TextView7"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_below="@id/capture_runtime"
+		            android:text="@string/captured_samples"
+		            android:textAppearance="?android:attr/textAppearanceMedium" />
 		        
 		        <TextView
-	        		android:id="@+id/capture_number_of_samples"
-	       			android:layout_width="match_parent"
-	        		android:layout_height="wrap_content"
-	        		android:layout_below="@id/capture_TextView6"
-	        		android:gravity="right"
-	        		android:layout_marginBottom="24dp"
-	        		android:textAppearance="?android:attr/textAppearanceMedium" />
+		            android:id="@+id/capture_number_of_samples"
+		            android:layout_width="fill_parent"
+		            android:layout_height="wrap_content"
+		            android:layout_below="@id/capture_runtime"
+		            android:layout_marginBottom="24dp"
+		            android:layout_toRightOf="@id/capture_TextView7"
+		            android:gravity="right"
+		            android:textAppearance="?android:attr/textAppearanceMedium" />
 		        
 		        <TextView
 		        	android:id="@+id/capture_TextView9"
