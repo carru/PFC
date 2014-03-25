@@ -179,10 +179,12 @@ public class ScanFragment extends Fragment {
 
         // Ensures Bluetooth is enabled on the device.  If Bluetooth is not currently enabled,
         // fire an intent to display a dialog asking the user to grant permission to enable it.
+        boolean bluetoothWasOff = false;
         if (!Common.mBluetoothAdapter.isEnabled()) {
             if (!Common.mBluetoothAdapter.isEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                bluetoothWasOff = true;
             }
         }
 
@@ -201,7 +203,8 @@ public class ScanFragment extends Fragment {
         // Perform startup scan
         if (Common.scanOnStartup) {
      		Common.scanOnStartup = false;
-     		scanButton.callOnClick();
+     		// Don't scan if we had to turn on BT (prevent black screen)  
+     		if (!bluetoothWasOff) { scanButton.callOnClick(); }
      	}
     }
 
