@@ -95,7 +95,7 @@
     <string name="category_general">General</string>
     <string name="category_favourites">Favourite system</string>
     <string name="auto_scan">Scan on startup</string>
-    <string name="auto_scan_summary">Automtically perfom a device scan when app starts</string>
+    <string name="auto_scan_summary">Automatically perfom a device scan when app starts</string>
     <string name="capture_in_background">Keep logger alive</string>
     <string name="capture_in_background_summary">[NOT YET IMPLEMENTED] Allow logger to continue capturing samples when you close this app</string>
     <string name="service_in_foreground">Run service in foreground</string>
