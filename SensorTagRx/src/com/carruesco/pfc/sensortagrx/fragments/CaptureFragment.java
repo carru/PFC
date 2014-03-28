@@ -48,7 +48,7 @@ public class CaptureFragment extends Fragment {
 	
 	// Thread to refresh runtime and number of samples written
 	private Thread refresher;
-	private int REFRESH_PERIOD = 1000; // milliseconds
+	private int REFRESH_PERIOD = 100; // milliseconds
 	
 	//private
 	
