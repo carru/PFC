@@ -50,8 +50,6 @@ public class CaptureFragment extends Fragment {
 	private Thread refresher;
 	private int REFRESH_PERIOD = 100; // milliseconds
 	
-	//private
-	
 	// Empty constructor required for fragment subclasses
 	public CaptureFragment() {}
 	
@@ -204,13 +202,6 @@ public class CaptureFragment extends Fragment {
 		stopRefreshingInfo();
 		unRegisterReciever();
 	}
-	
-	/*private void clearAdditionalInfo() {
-		mFileName.setText("");
-		mLogStartTime.setText("");
-		mLogRuntime.setText("");
-		mLogSamples.setText("");
-	}*/
 	
 	private void setUi(int type) {
     	switch (type) {

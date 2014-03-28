@@ -197,15 +197,6 @@ public class BleService extends Service {
     }
     
     private void setupSensors() {
-    	// Debug, to avoid cluttering
-    	//SamplesLogger.deleteAllLogs(this);
-    	
-    	// Prepare log writer
-    	/*logger = new SamplesLogger(this);
-    	if (!logger.isReady()) {
-    		Toast.makeText(this, R.string.error_fs_not_writable, Toast.LENGTH_LONG).show();
-    	}*/
-    	
     	// This calls are blocking and the service main thread can't be blocked
     	// or it won't receive callbacks (where the unblocks are)
     	final BleService mBleService = this;
@@ -234,7 +225,6 @@ public class BleService extends Service {
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            //String intentAction;
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 // Attempts to discover services after successful connection.
             	mBluetoothGatt.discoverServices();

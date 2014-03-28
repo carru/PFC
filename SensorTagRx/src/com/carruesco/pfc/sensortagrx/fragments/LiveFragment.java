@@ -114,7 +114,6 @@ public class LiveFragment extends Fragment{
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BleService.ACTION_DATA_AVAILABLE);
-        //intentFilter.addAction(BleService.ACTION_CONNECTED);
         return intentFilter;
     }
 }
