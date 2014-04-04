@@ -1,0 +1,14 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    
+    <!-- Smaller screen margins for cards -->
+    <dimen name="activity_small_horizontal_margin">8dp</dimen>
+    <dimen name="activity_small_vertical_margin">8dp</dimen>
+    
+    <!-- Live Data (inside the cards) -->
+    <dimen name="live_data_inside_card_horizontal_margin">40dp</dimen>
+
+</resources>
