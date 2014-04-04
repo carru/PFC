@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.Character.UnicodeBlock;
 import java.util.UUID;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -27,7 +30,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+        
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		if (mBluetoothAdapter == null) {
 		    // Device does not support Bluetooth
@@ -166,32 +169,40 @@ class ConnectedThread extends Thread {
         mmInStream = tmpIn;
         mmOutStream = tmpOut;
         
-        // Commands
-        String endOfCommand = "\u0099\u0098";
-        String samplingRate200HzCommand = "SA200" + endOfCommand;
-        String sendThroughBTCommand = "BT" + endOfCommand;
-        String enableCommand = "ON" + endOfCommand;
+        setupSensor();
+    }
+    
+    private void setupSensor() {
+    	byte[] buffer = new byte[32];
+        //int bytes = 0;
+    	
+    	// Commands
+        byte[] samplingRate200HzCommand = {0x53, 0x41, 0x32, 0x30, 0x30, (byte) 0x99, (byte) 0x98}; // SA200
+        byte[] sendThroughBTCommand = {0x42, 0x54, (byte) 0x99, (byte) 0x98}; // BT
+        byte[] enableCommand = {0x4F, 0x4E, (byte) 0x99, (byte) 0x98}; // ON
         
         // Set sampling rate
-        Log.d(TAG, "Setting sample rate");
-        byte[] data;
-		try { data = samplingRate200HzCommand.getBytes("UTF-8"); }
-		catch (UnsupportedEncodingException e) { Log.d(TAG, "charset exception"); data = samplingRate200HzCommand.getBytes(); }
-        write(data);
-        try { sleep(1000); } catch (InterruptedException e1) { }
-        
+        Log.i(TAG, "Setting sample rate");
+		write(samplingRate200HzCommand);
+        // Read ACK
+		read(buffer);
+		//Log.d(TAG,String.valueOf(isAck(buffer)));
+		
+		//Log.d(TAG, "Read " + bytes + " bytes");
+       
         // Set to send through BT
-        Log.d(TAG, "Setting to send through BT");
-		try { data = sendThroughBTCommand.getBytes("UTF-8"); }
-		catch (UnsupportedEncodingException e) { Log.d(TAG, "charset exception"); data = sendThroughBTCommand.getBytes(); }
-        write(data);
-        try { sleep(1000); } catch (InterruptedException e1) { }
+        Log.i(TAG, "Setting to send through BT");
+        write(sendThroughBTCommand);
+        // Read ACK
+     	read(buffer);
+     	//Log.d(TAG, "Read " + bytes + " bytes");
         
         // Enable
-        Log.d(TAG, "Enabling sensor");
-		try { data = enableCommand.getBytes("UTF-8"); }
-		catch (UnsupportedEncodingException e) { Log.d(TAG, "charset exception"); data = enableCommand.getBytes(); }
-        write(data);
+        Log.i(TAG, "Enabling sensor");
+        write(enableCommand);
+        // Read ACK
+     	read(buffer);
+     	//Log.d(TAG, "Read " + bytes + " bytes");
     }
  
     public void run() {
@@ -200,14 +211,14 @@ class ConnectedThread extends Thread {
  
         Log.d(TAG, "Reading");
         // Keep listening to the InputStream until an exception occurs
-        while (true) {
+        /*while (true) {
             try {
                 // Read from the InputStream
                 bytes = mmInStream.read(buffer);
                 Log.d(TAG, "Read " + bytes + " bytes");
                 
                 if (bytes > 0) {
-                	Log.d(TAG, "Read: " + buffer);
+                	//Log.d(TAG, "Read: " + buffer);
                 }
                 
                 // Send the obtained bytes to the UI activity
@@ -215,9 +226,30 @@ class ConnectedThread extends Thread {
             } catch (IOException e) {
                 break;
             }
-        }
+        }*/
     }
- 
+
+    // DOES NOT WORK PROPERLY
+    private boolean isAck(byte[] data) {
+    	byte[] ackCommand = {0x41, 0x43, 0x4B, (byte) 0x99, (byte) 0x98}; // ACK
+    	
+    	for (int i=0; i<data.length; i++) {
+    		if (data[i] != ackCommand[i]) { return false; }
+    	}
+    	
+    	return true;
+    }
+    
+    private int read(byte[] buffer) {
+    	int bytes;
+    	
+    	try {
+			bytes = mmInStream.read(buffer);
+		} catch (IOException e) { return 0; }
+    	
+		return bytes;
+    }
+    
     /* Call this from the main activity to send data to the remote device */
     public void write(byte[] bytes) {
         try {
