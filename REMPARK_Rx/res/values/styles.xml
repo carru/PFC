@@ -16,5 +16,62 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-
+    
+    <!-- Grey background -->
+    <color name="GreyBackground">#e5e5e5</color>
+    <!-- Navigation drawer background -->
+    <color name="NDBackground">#222</color>
+    
+    <!-- Standard margins for all activities -->
+    <style name="StandardMargins">
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
+    	<item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+    	<item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+    	<item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
+    </style>
+    
+    <style name="SmallMargins">
+        <item name="android:layout_marginBottom">@dimen/activity_small_vertical_margin</item>
+    	<item name="android:layout_marginLeft">@dimen/activity_small_horizontal_margin</item>
+    	<item name="android:layout_marginRight">@dimen/activity_small_horizontal_margin</item>
+    	<item name="android:layout_marginTop">@dimen/activity_small_vertical_margin</item>
+    </style>
+    
+    <!-- Live Data styles -->
+    <style name="SensorName">
+        <item name="android:layout_width">match_parent</item>
+    	<item name="android:layout_height">wrap_content</item>
+    	<item name="android:gravity">center</item>
+    	<item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style>
+    <style name="SensorNameSeparatorSpace">
+        <item name="android:layout_width">match_parent</item>
+    	<item name="android:layout_height">8dp</item>
+    </style>
+    <style name="LiveDataMargins">
+    	<item name="android:layout_marginLeft">@dimen/live_data_inside_card_horizontal_margin</item>
+    	<item name="android:layout_marginRight">@dimen/live_data_inside_card_horizontal_margin</item>
+    </style>
+    <style name="Axis">
+        <item name="android:layout_width">0dp</item>
+    	<item name="android:layout_height">wrap_content</item>
+    	<item name="android:layout_weight">1</item>
+    	<item name="android:gravity">left</item>
+    	<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+    <style name="Data">
+        <item name="android:layout_width">0dp</item>
+    	<item name="android:layout_height">wrap_content</item>
+    	<item name="android:layout_weight">2</item>
+    	<item name="android:gravity">left</item>
+    	<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+    <style name="Units">
+        <item name="android:layout_width">0dp</item>
+    	<item name="android:layout_height">wrap_content</item>
+    	<item name="android:layout_weight">1</item>
+    	<item name="android:gravity">right</item>
+    	<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+    
 </resources>
