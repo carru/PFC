@@ -25,7 +25,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.IBinder;
@@ -99,11 +98,6 @@ public class MasterActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.master_activity);
-
-        // Determine whether BLE is supported on the device
-        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-        	finish();
-        }
         
         // Set preferences to default values (only on first app launch, see third argument)
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -113,7 +107,7 @@ public class MasterActivity extends Activity {
         Common.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         
         // Start service
-        Intent intent = new Intent(this, BleService.class);
+        Intent intent = new Intent(this, BTService.class);
         startService(intent);
         
         // Setup navigation drawer
@@ -129,7 +123,7 @@ public class MasterActivity extends Activity {
     @Override
     protected void onDestroy() {
     	// Stop service
-    	Intent intent = new Intent(this, BleService.class);
+    	Intent intent = new Intent(this, BTService.class);
     	stopService(intent);
     	
     	super.onDestroy();
@@ -148,7 +142,7 @@ public class MasterActivity extends Activity {
     @Override
     protected void onResume() {
     	// Bind to BleService
-    	Intent intent = new Intent(this, BleService.class);
+    	Intent intent = new Intent(this, BTService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     	super.onResume();
     }
@@ -158,7 +152,7 @@ public class MasterActivity extends Activity {
 
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
-        	Common.mService = ((BleService.LocalBinder) service).getService();
+        	Common.mService = ((BTService.LocalBinder) service).getService();
             Common.mBound = true;
         }
 

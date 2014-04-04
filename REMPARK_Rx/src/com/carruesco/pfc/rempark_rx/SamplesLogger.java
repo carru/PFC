@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.carruesco.pfc.rempark_rx.sensors.SensorSample;
+import com.carruesco.pfc.rempark_rx.SensorSample;
 
 import android.content.Context;
 import android.os.Environment;

@@ -18,7 +18,7 @@ public class Common {
 	public static SharedPreferences sharedPref;
 	
 	// BLE Service
-	public static BleService mService;
+	public static BTService mService;
 	public static boolean mBound;
 	
 	public static void init() {

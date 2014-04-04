@@ -1,9 +1,9 @@
 package com.carruesco.pfc.rempark_rx.fragments;
 
-import com.carruesco.pfc.rempark_rx.BleService;
+import com.carruesco.pfc.rempark_rx.BTService;
 import com.carruesco.pfc.rempark_rx.Common;
 import com.carruesco.pfc.rempark_rx.R;
-import com.carruesco.pfc.rempark_rx.sensors.SensorSample;
+import com.carruesco.pfc.rempark_rx.SensorSample;
 
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
@@ -60,14 +60,14 @@ public class LiveFragment extends Fragment{
 	@Override
 	public void onPause() {
 		registerReceiver();
-		BleService.broadcastData = false;
+		BTService.broadcastData = false;
 		super.onPause();
 	}
 	
 	@Override
 	public void onResume() {
 		registerReciever();
-		BleService.broadcastData = true;
+		BTService.broadcastData = true;
 		super.onResume();
 	}
 	
@@ -90,8 +90,8 @@ public class LiveFragment extends Fragment{
 	}
 	
 	private SensorSample getData(Intent intent) {
-    	float[] data = intent.getFloatArrayExtra(BleService.VALUE);
-        String sensorName = intent.getStringExtra(BleService.SENSOR_TYPE);
+    	float[] data = intent.getFloatArrayExtra(BTService.VALUE);
+        String sensorName = intent.getStringExtra(BTService.SENSOR_TYPE);
         return new SensorSample(data, sensorName);
     }
 	
@@ -113,7 +113,7 @@ public class LiveFragment extends Fragment{
     
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BleService.ACTION_DATA_AVAILABLE);
+        intentFilter.addAction(BTService.ACTION_DATA_AVAILABLE);
         return intentFilter;
     }
 }

@@ -1,28 +1,15 @@
 package com.carruesco.pfc.rempark_rx;
 
-import java.util.UUID;
-
-import com.carruesco.pfc.rempark_rx.sensors.Accelerometer;
-import com.carruesco.pfc.rempark_rx.sensors.Gyroscope;
-import com.carruesco.pfc.rempark_rx.sensors.Magnetometer;
-import com.carruesco.pfc.rempark_rx.sensors.Sensor;
-import com.carruesco.pfc.rempark_rx.sensors.SensorSample;
-
 import android.app.Service;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothGattCallback;
-import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattDescriptor;
-import android.bluetooth.BluetoothGattService;
-import android.bluetooth.BluetoothProfile;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.format.Time;
 
-public class BleService extends Service {
+public class BTService extends Service {
 	// Log writer
     private SamplesLogger logger;
     private Time loggerStartTime = new Time();
@@ -40,9 +27,12 @@ public class BleService extends Service {
 	Thread sensorEnablingThread;
 	
 	// Sensors
-	private Accelerometer accelerometer = new Accelerometer();
+	private String accelerometer = "A";
+	private String magnetometer = "M";
+	private String gyroscope = "G";
+	/*private Accelerometer accelerometer = new Accelerometer();
     private Magnetometer magnetometer = new Magnetometer();
-    private Gyroscope gyroscope = new Gyroscope();
+    private Gyroscope gyroscope = new Gyroscope();*/
     // Magnetometer calibration
 	private boolean magnetometerIsCalibrating = false;
 	private float[] calibrationOffset;
@@ -77,10 +67,10 @@ public class BleService extends Service {
 		if (logger != null) { logger.close(); }
 		
 		// Close communication
-		if (mBluetoothGatt != null) {
+		/*if (mBluetoothGatt != null) {
 			mBluetoothGatt.close();
 			mBluetoothGatt = null;
-        }
+        }*/
 		
 		super.onDestroy();
 	}
@@ -90,9 +80,9 @@ public class BleService extends Service {
      * runs in the same process as its clients, we don't need to deal with IPC.
      */
     public class LocalBinder extends Binder {
-    	BleService getService() {
+    	BTService getService() {
             // Return this instance of BleService so clients can call public methods
-            return BleService.this;
+            return BTService.this;
         }
     }
     
@@ -165,7 +155,7 @@ public class BleService extends Service {
         }
         // We want to directly connect to the device, so we are setting the autoConnect
         // parameter to false.
-        mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
+        //mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
         //Log.d(TAG, "Trying to create a new connection.");
         connectedDeviceAddress = Common.deviceAddress;
         //mConnectionState = STATE_CONNECTING;
@@ -196,33 +186,33 @@ public class BleService extends Service {
         }
     }
     
-    private void setupSensors() {
+    /*private void setupSensors() {
     	// This calls are blocking and the service main thread can't be blocked
     	// or it won't receive callbacks (where the unblocks are)
-    	final BleService mBleService = this;
+    	final BTService mBleService = this;
     	sensorEnablingThread = new Thread() {
     		@Override
     		public void run() {
     			try {
     				// Enable sensors
-					while(BleService.busy) { sleep(10); } accelerometer.enable(mBleService);
-					while(BleService.busy) { sleep(10); } magnetometer.enable(mBleService);
-					while(BleService.busy) { sleep(10); } gyroscope.enable(mBleService);
+					while(BTService.busy) { sleep(10); } accelerometer.enable(mBleService);
+					while(BTService.busy) { sleep(10); } magnetometer.enable(mBleService);
+					while(BTService.busy) { sleep(10); } gyroscope.enable(mBleService);
 	    			// Enable notifications
-					while(BleService.busy) { sleep(10); } accelerometer.enableNotifications(mBleService);
-					while(BleService.busy) { sleep(10); } magnetometer.enableNotifications(mBleService);
-					while(BleService.busy) { sleep(10); } gyroscope.enableNotifications(mBleService);
+					while(BTService.busy) { sleep(10); } accelerometer.enableNotifications(mBleService);
+					while(BTService.busy) { sleep(10); } magnetometer.enableNotifications(mBleService);
+					while(BTService.busy) { sleep(10); } gyroscope.enableNotifications(mBleService);
 				} catch (InterruptedException e) {
 					return;
 				}
     		}
     	};
     	sensorEnablingThread.start();
-    }
+    }*/
     
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
-    private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
+    /*private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
@@ -234,7 +224,7 @@ public class BleService extends Service {
             	Common.isConnecting = false;
             	disconnect();
             	Intent intent = new Intent(ACTION_DISCONNECTED);
-            	LocalBroadcastManager.getInstance(BleService.this).sendBroadcast(intent);
+            	LocalBroadcastManager.getInstance(BTService.this).sendBroadcast(intent);
             }
         }
 
@@ -254,7 +244,7 @@ public class BleService extends Service {
             	Common.isConnected = true;
             	Common.isConnecting = false;
             	Intent intent = new Intent(ACTION_CONNECTED);
-            	LocalBroadcastManager.getInstance(BleService.this).sendBroadcast(intent);
+            	LocalBroadcastManager.getInstance(BTService.this).sendBroadcast(intent);
             	notifyIsConnected = false;
             }
             
@@ -272,9 +262,9 @@ public class BleService extends Service {
         	// Write operation completed
         	busy = false;
         }
-    };
+    };*/
     
-    private SensorSample extractSampleAndLogIt(BluetoothGattCharacteristic characteristic) {
+    /*private SensorSample extractSampleAndLogIt(BluetoothGattCharacteristic characteristic) {
     	// From which sensor?
         if (characteristic.getUuid().toString().equalsIgnoreCase(accelerometer.getDataUUID())) {
         	// Accelerometer
@@ -341,7 +331,7 @@ public class BleService extends Service {
         }
         
 		return null;
-    }
+    }*/
     
     private void broadcastNewSample(SensorSample sample) {
     	final Intent intent = new Intent(ACTION_DATA_AVAILABLE);
@@ -350,51 +340,7 @@ public class BleService extends Service {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
     
-    /**
-     * Request a read on a given {@code BluetoothGattCharacteristic}. The read result is reported
-     * asynchronously through the {@code BluetoothGattCallback#onCharacteristicRead(android.bluetooth.BluetoothGatt, android.bluetooth.BluetoothGattCharacteristic, int)}
-     * callback.
-     *
-     * @param characteristic The characteristic to read from.
-     */
-    public void readCharacteristic(BluetoothGattCharacteristic characteristic) {
-        if (Common.mBluetoothAdapter == null || mBluetoothGatt == null) { return; }
-        mBluetoothGatt.readCharacteristic(characteristic);
-    }
-
-    /**
-     * Enables or disables notification on a give characteristic.
-     *
-     * @param characteristic Characteristic to act on.
-     * @param enabled If true, enable notification.  False otherwise.
-     */
-    public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic, boolean enabled) {
-        if (Common.mBluetoothAdapter == null || mBluetoothGatt == null) { return; }
-        
-        busy = true;
-        
-        final UUID CCC = UUID.fromString(Sensor.CLIENT_CHARACTERISTIC_CONFIG);
-        
-        // Enable/disable locally
-        mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
-        // Enable/disable remotely
-        BluetoothGattDescriptor descriptor = characteristic.getDescriptor(CCC);
-        descriptor.setValue(enabled ? BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE : BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE);
-        mBluetoothGatt.writeDescriptor(descriptor);
-    }
-
-    public BluetoothGattService getService(UUID uuid) {
-    	return mBluetoothGatt.getService(uuid);
-    }
-    
-    public boolean writeCharacteristic(BluetoothGattCharacteristic characteristic, byte[] b) {
-        busy = true;
-        
-        characteristic.setValue(b);
-        return mBluetoothGatt.writeCharacteristic(characteristic);
-      }
-    
-    public String getAccelerometerName() { return accelerometer.getName(); }
-    public String getMagnetometerName() { return magnetometer.getName(); }
-    public String getGyroscopeName() { return gyroscope.getName(); }
+    public String getAccelerometerName() { return accelerometer; }
+    public String getMagnetometerName() { return magnetometer; }
+    public String getGyroscopeName() { return gyroscope; }
 }

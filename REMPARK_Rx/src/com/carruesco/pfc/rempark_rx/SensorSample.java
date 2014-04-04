@@ -1,4 +1,4 @@
-package com.carruesco.pfc.rempark_rx.sensors;
+package com.carruesco.pfc.rempark_rx;
 
 public class SensorSample {
 	private float x, y, z;

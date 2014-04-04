@@ -3,7 +3,7 @@ package com.carruesco.pfc.rempark_rx.fragments;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
-import com.carruesco.pfc.rempark_rx.BleService;
+import com.carruesco.pfc.rempark_rx.BTService;
 import com.carruesco.pfc.rempark_rx.Common;
 import com.carruesco.pfc.rempark_rx.R;
 
@@ -243,15 +243,15 @@ public class CaptureFragment extends Fragment {
     
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BleService.ACTION_DISCONNECTED);
-        intentFilter.addAction(BleService.ACTION_CONNECTED);
+        intentFilter.addAction(BTService.ACTION_DISCONNECTED);
+        intentFilter.addAction(BTService.ACTION_CONNECTED);
         return intentFilter;
     }
     
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
     	  @Override
     	  public void onReceive(Context context, Intent intent) {
-    		  if (intent.getAction().equals(BleService.ACTION_CONNECTED)) {
+    		  if (intent.getAction().equals(BTService.ACTION_CONNECTED)) {
     			  setUi(CONNECTED);
     		  }
     		  else { // ACTION_DISCONNECTED

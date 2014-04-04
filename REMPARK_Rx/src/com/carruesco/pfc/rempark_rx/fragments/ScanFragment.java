@@ -2,7 +2,7 @@ package com.carruesco.pfc.rempark_rx.fragments;
 
 import java.util.ArrayList;
 
-import com.carruesco.pfc.rempark_rx.BleService;
+import com.carruesco.pfc.rempark_rx.BTService;
 import com.carruesco.pfc.rempark_rx.Common;
 import com.carruesco.pfc.rempark_rx.FavouritesList;
 import com.carruesco.pfc.rempark_rx.R;
@@ -13,7 +13,6 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -48,14 +47,9 @@ public class ScanFragment extends Fragment {
     private static final int CONNECTING = 4;
     
     private LeDeviceListAdapter mLeDeviceListAdapter;
-	private boolean mScanning;
-    private Thread stopScanThread;
     
     // For the dialog to enable BT
     private static final int REQUEST_ENABLE_BT = 1;
-    
-    // Stops scanning after 10 seconds.
-    private static final long SCAN_PERIOD = 10000;
     
     // Favourite devices list
     private ArrayList<String> list;
@@ -68,26 +62,18 @@ public class ScanFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Initializes a Bluetooth adapter.  For API level 18 and above, get a reference to
-        // BluetoothAdapter through BluetoothManager.
-        if (Common.mBluetoothAdapter == null) {
-        	final BluetoothManager bluetoothManager =
-                    (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
-            Common.mBluetoothAdapter = bluetoothManager.getAdapter();
-        }
-        
-        // Checks if Bluetooth is supported on the device.
-        if (Common.mBluetoothAdapter == null) {
-            getActivity().finish();
-            return;
-        }
+        Common.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		if (Common.mBluetoothAdapter == null) {
+		    // Device does not support Bluetooth
+			getActivity().finish();
+		}
     }
 	
 	private void initiateConnection(BluetoothDevice device) {
 		if (device == null) return;
         
         // Stop scanning
-        scanLeDevice(false);
+        stopScan();
         
         // Disconnect from current device
         if (Common.isConnected) { Common.disconnect(); }
@@ -135,9 +121,9 @@ public class ScanFragment extends Fragment {
 		scanButton = (Button) rootView.findViewById(R.id.scan_button);
 		scanButton.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
-	        		if (mScanning) {
+	        		if (Common.mBluetoothAdapter.isDiscovering()) {
 	        			// Stop scanning
-	        			scanLeDevice(false);
+	        			stopScan();
 	        		} else {
 	        			// Clear device list
 	        			mLeDeviceListAdapter.clear();
@@ -145,7 +131,7 @@ public class ScanFragment extends Fragment {
 	        			
 	        			// Start scanning
 	        			if (Common.isConnected) Common.disconnect();
-	        			scanLeDevice(true);
+	        			startScan();
 	        		}
 		    }
 		});
@@ -204,7 +190,7 @@ public class ScanFragment extends Fragment {
         if (Common.scanOnStartup) {
      		Common.scanOnStartup = false;
      		// Don't scan if we had to turn on BT (prevent black screen)  
-     		if (!bluetoothWasOff) { scanButton.callOnClick(); }
+     		if (!bluetoothWasOff) { startScan(); }
      	}
     }
 
@@ -220,53 +206,11 @@ public class ScanFragment extends Fragment {
     @Override
 	public void onPause() {
         super.onPause();
-        if (mScanning) { scanLeDevice(false); }
+        if (Common.mBluetoothAdapter.isDiscovering()) { stopScan(); }
         unRegisterReciever();
 
         // Save favourites list if it has been modified
         if (listHasBeenModified) { FavouritesList.save(Common.sharedPref, list); }
-    }
-    
-    private void scanLeDevice(final boolean enable) {
-        if (enable) {
-        	// This thread will stop the scanner after SCAN_PERIOD milliseconds
-        	stopScanThread = new Thread() {
-        		@Override
-        		public void run() {
-        			try {
-        				sleep(SCAN_PERIOD);
-        			} catch (InterruptedException e) {
-    					return;
-    				}
-        			mScanning = false;
-	                Common.mBluetoothAdapter.stopLeScan(mLeScanCallback);
-	                    
-	                // Change UI unless already connected (user connected to a device while scanning)
-	                // This thread cannot change the UI, so send a broadcast to order it
-	                if (!mConnectionState.getText().equals(getString(R.string.connected))) {
-	                    Intent intent = new Intent(BleService.ACTION_DISCONNECTED);
-	                    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
-	                }
-        		}
-        	};
-        	stopScanThread.start();
-
-            mScanning = true;
-            Common.mBluetoothAdapter.startLeScan(mLeScanCallback);
-            Common.disconnect();
-            
-            // Change UI
-            setUi(SCANNING);
-        } else {
-        	// Stop the thread so it doesn't interfere with future scans
-        	if (stopScanThread != null) { stopScanThread.interrupt(); }
-        	
-            mScanning = false;
-            Common.mBluetoothAdapter.stopLeScan(mLeScanCallback);
-
-            // Change UI
-            setUi(DISCONNECTED);
-        }
     }
     
     private void setUi(int type) {
@@ -314,52 +258,48 @@ public class ScanFragment extends Fragment {
     	if (list == null) { return false; }
     	return list.contains(device.getAddress());
     }
+     
+    private void startScan() {
+    	Common.disconnect();
+    	Common.mBluetoothAdapter.startDiscovery();
+    	
+    	// Change UI
+        setUi(SCANNING);
+    }
     
-    // Device scan callback.
-    private BluetoothAdapter.LeScanCallback mLeScanCallback =
-            new BluetoothAdapter.LeScanCallback() {
-
-        @Override
-        public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
-        	getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                	mLeDeviceListAdapter.addDevice(device, rssi);
-                    mLeDeviceListAdapter.notifyDataSetChanged();
-                    
-                    // Is favourite system enabled?
-                    if (Common.sharedPref.getBoolean("key_favourites_system", false)) {
-                    	// If device is on the favourites list, connect
-                    	if (isFavourite(device)) {
-                    		initiateConnection(device);
-                    		Toast.makeText(getActivity(), R.string.connected_to_favourite, Toast.LENGTH_LONG).show();
-                    	}
-                    }
-                }
-            });
-        }
-    };
+    private void stopScan() {
+        Common.mBluetoothAdapter.cancelDiscovery();
+    }
     
     private void registerReceiver() {
     	LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver,
     			makeGattUpdateIntentFilter());
+    	getActivity().registerReceiver(mBtReceiver, makeBtIntentFilter());
     }
     
     private void unRegisterReciever() {
     	LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
+    	getActivity().unregisterReceiver(mBtReceiver);
     }
     
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BleService.ACTION_DISCONNECTED);
-        intentFilter.addAction(BleService.ACTION_CONNECTED);
+        intentFilter.addAction(BTService.ACTION_DISCONNECTED);
+        intentFilter.addAction(BTService.ACTION_CONNECTED);
+        return intentFilter;
+    }
+    
+    private static IntentFilter makeBtIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
+        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         return intentFilter;
     }
     
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
     	  @Override
     	  public void onReceive(Context context, Intent intent) {
-    		  if (intent.getAction().equals(BleService.ACTION_CONNECTED)) {
+    		  if (intent.getAction().equals(BTService.ACTION_CONNECTED)) {
     			  setUi(CONNECTED);
     		  }
     		  else { // ACTION_DISCONNECTED
@@ -367,4 +307,38 @@ public class ScanFragment extends Fragment {
     		  }
     	  }
     };
+    
+    // Create a BroadcastReceiver for BT scanner
+ 	private final BroadcastReceiver mBtReceiver = new BroadcastReceiver() {
+		public void onReceive(Context context, Intent intent) {
+			// When discovery finds a device
+			if (intent.getAction().equals(BluetoothDevice.ACTION_FOUND)) {
+				// Get the BluetoothDevice object from the Intent
+				final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+				final short rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, (short) 0);
+
+				getActivity().runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						mLeDeviceListAdapter.addDevice(device, (int) rssi);
+						mLeDeviceListAdapter.notifyDataSetChanged();
+
+						// Is favourite system enabled?
+						if (Common.sharedPref.getBoolean("key_favourites_system", false)) {
+							// If device is on the favourites list, connect
+							if (isFavourite(device)) {
+								initiateConnection(device);
+								Toast.makeText(getActivity(),R.string.connected_to_favourite,Toast.LENGTH_LONG).show();
+							}
+						}
+					}
+				});
+			}
+			else if (intent.getAction().equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)) {
+				if (!mConnectionState.getText().equals(getString(R.string.connected))) {
+					setUi(DISCONNECTED);
+				}
+			}
+		}
+	};
 }
