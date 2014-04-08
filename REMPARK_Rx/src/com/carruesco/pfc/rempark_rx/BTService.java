@@ -1,13 +1,10 @@
 package com.carruesco.pfc.rempark_rx;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.UUID;
 
 import android.app.Service;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Binder;
@@ -147,7 +144,7 @@ public class BTService extends Service {
     
     public void disconnect() {
     	// Stop worker thread
-    	//if (worker != null) { worker.interrupt(); }
+    	if (worker != null) { worker.interrupt(); }
     	
     	// Close socket
     	closeSocket();
