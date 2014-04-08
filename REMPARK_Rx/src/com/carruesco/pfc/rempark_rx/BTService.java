@@ -1,30 +1,28 @@
 package com.carruesco.pfc.rempark_rx;
 
+import java.io.IOException;
+import java.util.UUID;
+
 import android.app.Service;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.format.Time;
+import android.util.Log;
 
 public class BTService extends Service {
+	private BluetoothSocket mmSocket;
+	
 	// Log writer
     private SamplesLogger logger;
     private Time loggerStartTime = new Time();
-    
-	// Address of active device
-	private String connectedDeviceAddress;
-	
-	// Block BT operations until previous one is completed
-	private static volatile boolean busy = false;
 	
 	// Send a broadcast when the sensor starts sending data (connecting -> connected)
-	private static boolean notifyIsConnected = false;
-	
-	// Thread to enable sensors
-	Thread sensorEnablingThread;
+	//private static boolean notifyIsConnected = false;
 	
 	// Sensors
 	private String accelerometer = "A";
@@ -36,9 +34,6 @@ public class BTService extends Service {
     // Magnetometer calibration
 	private boolean magnetometerIsCalibrating = false;
 	private float[] calibrationOffset;
-    
-    private BluetoothGatt mBluetoothGatt;
-	//private int mConnectionState = STATE_DISCONNECTED;
 	
 	// Binder given to clients
     private final IBinder mBinder = new LocalBinder();
@@ -46,15 +41,12 @@ public class BTService extends Service {
     // Broadcast sensor data?
     public static boolean broadcastData = false;
     // Broadcast types
-    public final static String ACTION_DATA_AVAILABLE = "1"; //"com.carruesco.pfc.sensortagrx.ACTION_DATA_AVAILABLE";
-    public final static String ACTION_CONNECTED      = "2"; //"com.carruesco.pfc.sensortagrx.ACTION_CONNECTED";
-    public final static String ACTION_DISCONNECTED   = "3"; //"com.carruesco.pfc.sensortagrx.ACTION_DISCONNECTED";
+    public final static String ACTION_DATA_AVAILABLE = "1";
+    public final static String ACTION_CONNECTED      = "2";
+    public final static String ACTION_DISCONNECTED   = "3";
     // Intents
-    public final static String VALUE       = "4"; //"com.carruesco.pfc.sensortagrx.VALUE";
-    public final static String SENSOR_TYPE = "5"; //"com.carruesco.pfc.sensortagrx.SENSOR_TYPE";
-    // Since we are now using local broadcasts instead of system wide, I do not think it's necessary
-    // to include the full package name in the action.
-    // I reduced the strings length to the minimum to try to increase performance.
+    public final static String VALUE       = "4";
+    public final static String SENSOR_TYPE = "5";
     
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -67,10 +59,7 @@ public class BTService extends Service {
 		if (logger != null) { logger.close(); }
 		
 		// Close communication
-		/*if (mBluetoothGatt != null) {
-			mBluetoothGatt.close();
-			mBluetoothGatt = null;
-        }*/
+		closeSocket();
 		
 		super.onDestroy();
 	}
@@ -135,31 +124,22 @@ public class BTService extends Service {
     }
     
     public boolean connect() {
-    	notifyIsConnected = true;
-    	
-    	// Previously connected device.  Try to reconnect.
-        if (connectedDeviceAddress != null && Common.deviceAddress.equals(connectedDeviceAddress) && mBluetoothGatt != null) {
-            //Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
-            if (mBluetoothGatt.connect()) {
-                //mConnectionState = STATE_CONNECTING;
-                return true;
-            } else {
-                return false;
-            }
-        }
-
         final BluetoothDevice device = Common.mBluetoothAdapter.getRemoteDevice(Common.deviceAddress);
-        if (device == null) {
-            //Log.w(TAG, "Device not found.  Unable to connect.");
-            return false;
-        }
-        // We want to directly connect to the device, so we are setting the autoConnect
-        // parameter to false.
-        //mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
-        //Log.d(TAG, "Trying to create a new connection.");
-        connectedDeviceAddress = Common.deviceAddress;
-        //mConnectionState = STATE_CONNECTING;
+        // Well-known SPP UUID
+        UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
         
+        // Open socket with the device
+        try {
+        	mmSocket = device.createInsecureRfcommSocketToServiceRecord(uuid);
+        } catch (IOException e) { 
+        	Log.i("Service", "Exception when opening socket");
+        	return false;
+        }
+        
+        //TODO
+        // Start a new thread to handle the setup procedure
+        
+        Log.i("Service", "Socket opened");
         return true;
     }
     
@@ -170,45 +150,27 @@ public class BTService extends Service {
      * callback.
      */
     public void disconnect() {
-    	// Stop worker thread (this happens when we are still enabling sensors)
-    	if (sensorEnablingThread != null) {
-    		if (sensorEnablingThread.isAlive()) { sensorEnablingThread.interrupt(); }
-    	}
-    	
-    	if (Common.mBluetoothAdapter == null || mBluetoothGatt == null) { return; }
-        mBluetoothGatt.disconnect();
+    	// Close socket
+    	closeSocket();
         
-        busy = false;
-        
+    	// Close logger if active
         if (logger != null) {
         	logger.close();
         	logger = null;
         }
     }
     
-    /*private void setupSensors() {
-    	// This calls are blocking and the service main thread can't be blocked
-    	// or it won't receive callbacks (where the unblocks are)
-    	final BTService mBleService = this;
-    	sensorEnablingThread = new Thread() {
-    		@Override
-    		public void run() {
-    			try {
-    				// Enable sensors
-					while(BTService.busy) { sleep(10); } accelerometer.enable(mBleService);
-					while(BTService.busy) { sleep(10); } magnetometer.enable(mBleService);
-					while(BTService.busy) { sleep(10); } gyroscope.enable(mBleService);
-	    			// Enable notifications
-					while(BTService.busy) { sleep(10); } accelerometer.enableNotifications(mBleService);
-					while(BTService.busy) { sleep(10); } magnetometer.enableNotifications(mBleService);
-					while(BTService.busy) { sleep(10); } gyroscope.enableNotifications(mBleService);
-				} catch (InterruptedException e) {
-					return;
-				}
-    		}
-    	};
-    	sensorEnablingThread.start();
-    }*/
+    private void closeSocket() {
+    	if (mmSocket != null) {
+	    	try {
+				mmSocket.close();
+				Log.i("Service", "Socket closed");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    }
     
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.

@@ -140,6 +140,7 @@ public class ScanFragment extends Fragment {
 		disconnectButton.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
 		    	Common.disconnect();
+		    	setUi(DISCONNECTED);
 		    }
 		});
 		
@@ -334,8 +335,9 @@ public class ScanFragment extends Fragment {
 					}
 				});
 			}
+			// When discovery finishes
 			else if (intent.getAction().equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)) {
-				if (!mConnectionState.getText().equals(getString(R.string.connected))) {
+				if (mConnectionState.getText().equals(getString(R.string.scanning))) {
 					setUi(DISCONNECTED);
 				}
 			}
