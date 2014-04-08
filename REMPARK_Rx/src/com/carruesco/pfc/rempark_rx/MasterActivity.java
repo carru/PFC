@@ -121,12 +121,12 @@ public class MasterActivity extends Activity {
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onStop() {
     	// Stop service
     	Intent intent = new Intent(this, BTService.class);
     	stopService(intent);
     	
-    	super.onDestroy();
+    	super.onStop();
     }
     
     @Override

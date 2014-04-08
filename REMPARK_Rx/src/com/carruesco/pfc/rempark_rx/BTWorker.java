@@ -5,10 +5,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 public class BTWorker extends Thread {
 	private String TAG = "BTWorker";
+	
+	// Context to send broadcasts
+	Context context;
 	
 	// Connection states
 	private final int CONNECTED = 1;
@@ -18,7 +24,8 @@ public class BTWorker extends Thread {
 	private InputStream mmInStream;
 	private OutputStream mmOutStream;
 	
-	public BTWorker(BluetoothSocket mmSocket) {
+	public BTWorker(Context context, BluetoothSocket mmSocket) {
+		this.context = context;
 		this.mmSocket = mmSocket;
 	}
 	
@@ -28,6 +35,7 @@ public class BTWorker extends Thread {
 		catch (IOException e1) {
 			Log.e(TAG, "Error connecting socket");
 			updateConnectionState(FAILED);
+			return;
 		}
         Log.i(TAG, "Socket opened");
 		
@@ -39,15 +47,18 @@ public class BTWorker extends Thread {
         } catch (IOException e) {
         	Log.e(TAG, "Error opening streams");
 			updateConnectionState(FAILED);
+			return;
         }
         Log.i(TAG, "Streams opened");
         
         if (!setupSensor()) {
         	Log.e(TAG, "Error setting up sensor");
 			updateConnectionState(FAILED);
+			return;
         }
         
         // Everything OK, sensor is now connected and sending data
+        Log.i(TAG, "Setup complete. Sensor should now start sending data");
         updateConnectionState(CONNECTED);
         
 		super.run();
@@ -122,10 +133,20 @@ public class BTWorker extends Thread {
 	}
 
 	private void updateConnectionState(int state) {
+		Intent intent;
+		
 		switch (state) {
 		case CONNECTED:
+			Common.isConnected = true;
+        	Common.isConnecting = false;
+			intent = new Intent(BTService.ACTION_CONNECTED);
+        	LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 			break;
 		case FAILED:
+			Common.isConnected = false;
+        	Common.isConnecting = false;
+			intent = new Intent(BTService.ACTION_DISCONNECTED);
+        	LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 			break;
 		}
 	}

@@ -20,7 +20,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -275,7 +274,7 @@ public class ScanFragment extends Fragment {
     
     private void registerReceiver() {
     	LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver,
-    			makeGattUpdateIntentFilter());
+    			makeUpdateIntentFilter());
     	getActivity().registerReceiver(mBtReceiver, makeBtIntentFilter());
     }
     
@@ -284,7 +283,7 @@ public class ScanFragment extends Fragment {
     	getActivity().unregisterReceiver(mBtReceiver);
     }
     
-    private static IntentFilter makeGattUpdateIntentFilter() {
+    private static IntentFilter makeUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BTService.ACTION_DISCONNECTED);
         intentFilter.addAction(BTService.ACTION_CONNECTED);

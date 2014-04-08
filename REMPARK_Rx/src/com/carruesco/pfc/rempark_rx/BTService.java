@@ -62,11 +62,7 @@ public class BTService extends Service {
 
 	@Override
 	public void onDestroy() {
-		// Stop logging
-		if (logger != null) { logger.close(); }
-		
-		// Close communication
-		closeSocket();
+		disconnect();
 		
 		super.onDestroy();
 	}
@@ -143,19 +139,16 @@ public class BTService extends Service {
         	return false;
         }
         
-        worker = new BTWorker(mmSocket);
+        worker = new BTWorker(this, mmSocket);
         worker.start();
         
         return true;
     }
     
-    /**
-     * Disconnects an existing connection or cancel a pending connection. The disconnection result
-     * is reported asynchronously through the
-     * {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
-     * callback.
-     */
     public void disconnect() {
+    	// Stop worker thread
+    	//if (worker != null) { worker.interrupt(); }
+    	
     	// Close socket
     	closeSocket();
         
@@ -177,60 +170,6 @@ public class BTService extends Service {
 			}
     	}
     }
-    
-    // Implements callback methods for GATT events that the app cares about.  For example,
-    // connection change and services discovered.
-    /*private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
-        @Override
-        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            if (newState == BluetoothProfile.STATE_CONNECTED) {
-                // Attempts to discover services after successful connection.
-            	mBluetoothGatt.discoverServices();
-            }
-            else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-            	Common.isConnected = false;
-            	Common.isConnecting = false;
-            	disconnect();
-            	Intent intent = new Intent(ACTION_DISCONNECTED);
-            	LocalBroadcastManager.getInstance(BTService.this).sendBroadcast(intent);
-            }
-        }
-
-        @Override
-        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-            	// Services discovery completed
-            	initializeCalibrationOffset();
-            	setupSensors();
-            }
-        }
-
-        @Override
-        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            // Notify that the device is connected and ready (sending data)
-        	if (notifyIsConnected) {
-            	Common.isConnected = true;
-            	Common.isConnecting = false;
-            	Intent intent = new Intent(ACTION_CONNECTED);
-            	LocalBroadcastManager.getInstance(BTService.this).sendBroadcast(intent);
-            	notifyIsConnected = false;
-            }
-            
-            SensorSample sample = extractSampleAndLogIt(characteristic);
-            
-            if (broadcastData) { broadcastNewSample(sample); }
-        }
-        
-        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-        	// Write operation completed
-        	busy = false;
-        }
-        
-        public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-        	// Write operation completed
-        	busy = false;
-        }
-    };*/
     
     /*private SensorSample extractSampleAndLogIt(BluetoothGattCharacteristic characteristic) {
     	// From which sensor?
