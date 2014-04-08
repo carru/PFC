@@ -1,6 +1,8 @@
 package com.carruesco.pfc.rempark_rx;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.UUID;
 
 import android.app.Service;
@@ -15,7 +17,12 @@ import android.text.format.Time;
 import android.util.Log;
 
 public class BTService extends Service {
+	private String TAG = "BTService";
+	
 	private BluetoothSocket mmSocket;
+	
+	// Worker thread to manage BT connection
+	private BTWorker worker;
 	
 	// Log writer
     private SamplesLogger logger;
@@ -132,14 +139,13 @@ public class BTService extends Service {
         try {
         	mmSocket = device.createInsecureRfcommSocketToServiceRecord(uuid);
         } catch (IOException e) { 
-        	Log.i("Service", "Exception when opening socket");
+        	Log.e("Service", "Exception when opening socket");
         	return false;
         }
         
-        //TODO
-        // Start a new thread to handle the setup procedure
+        worker = new BTWorker(mmSocket);
+        worker.start();
         
-        Log.i("Service", "Socket opened");
         return true;
     }
     
