@@ -53,7 +53,7 @@ public class LiveFragment extends Fragment{
 		    public void onClick(View v) {
 		    	if (Common.isConnected) {
 		    		//TODO
-		    		//Common.mService.calibrateMagnetometer();
+		    		BTWorker.magnetometerIsCalibrating = true;
 		    	}
 		    }
 		});

@@ -65,11 +65,6 @@ public class Sensor {
 		for (int i=0; i<frameStart.length; i++) {
 			if (frame[i] != frameStart[i]) { return false; }
 		}
-
-		/*if (frame[0] != 0x11) { return false; }
-		if (frame[1] != 0x22) { return false; }
-		if (frame[2] != 0x33) { return false; }
-		if (frame[3] != 0x44) { return false; }*/
 		
 		return true;
 	}

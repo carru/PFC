@@ -24,9 +24,6 @@ public class BTService extends Service {
     private SamplesLogger logger;
     private Time loggerStartTime = new Time();
 	
-    // Magnetometer calibration
-	//private boolean magnetometerIsCalibrating = false;
-	
 	// Binder given to clients
     private final IBinder mBinder = new LocalBinder();
 

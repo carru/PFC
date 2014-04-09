@@ -28,4 +28,10 @@ public class SensorSample {
 	public static double[] getDataVector(SensorSample sample) {
 		return new double[]{sample.x, sample.y, sample.z};
 	}
+	
+	public void applyOffset(SensorSample offset) {
+		x = x - offset.getX();
+		y = y - offset.getY();
+		z = z - offset.getZ();
+	}
 }
