@@ -105,6 +105,7 @@
     <string name="clear_favourites">Clear list of favourite devices</string>
     <string name="favourites_cleared">Favourites cleared</string>
     <string name="favourites_cleared_error">Error clearing favourites</string>
-    <string name="sampling_rate">Sampling rate</string>
+    <string name="sampling_rate">Sampling rate ([10, 200] Hz)</string>
+    <string name="sampling_rate_warning">You have to reconnect to apply the new sampling rate</string>
 
 </resources>

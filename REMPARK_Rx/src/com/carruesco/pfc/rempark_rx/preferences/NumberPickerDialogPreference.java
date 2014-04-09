@@ -1,5 +1,6 @@
 package com.carruesco.pfc.rempark_rx.preferences;
 
+import com.carruesco.pfc.rempark_rx.Common;
 import com.carruesco.pfc.rempark_rx.R;
 
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.NumberPicker;
+import android.widget.Toast;
 
 public class NumberPickerDialogPreference extends DialogPreference {
 	private static final int DEFAULT_MIN_VALUE = 0;
@@ -101,6 +103,8 @@ public class NumberPickerDialogPreference extends DialogPreference {
 		
 		// Update summary with current value
 		setSummary(Integer.toString(mValue) + " Hz");
+		
+		if (Common.isConnected) { Toast.makeText(getContext(), R.string.sampling_rate_warning, Toast.LENGTH_LONG).show(); }
 	}
 
 	@Override
