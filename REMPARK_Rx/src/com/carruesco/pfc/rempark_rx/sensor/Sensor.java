@@ -10,11 +10,12 @@ public class Sensor {
 	
 	// Commands
 	public static final byte[] samplingRate200HzCommand = {0x53, 0x41, 0x32, 0x30, 0x30, (byte) 0x99, (byte) 0x98}; // SA200
-	public static final byte[] samplingRate10HzCommand = {0x53, 0x41, 0x30, 0x31, 0x30, (byte) 0x99, (byte) 0x98}; // SA010
+	//public static final byte[] samplingRate10HzCommand = {0x53, 0x41, 0x30, 0x31, 0x30, (byte) 0x99, (byte) 0x98}; // SA010
 	public static final byte[] sendThroughBTCommand = {0x42, 0x54, (byte) 0x99, (byte) 0x98}; // BT
 	public static final byte[] enableCommand = {0x4F, 0x4E, (byte) 0x99, (byte) 0x98}; // ON
 	public static final byte[] ackCommand = {0x41, 0x43, 0x4B, (byte) 0x99, (byte) 0x98}; // ACK
 	public static final byte[] frameStart = {0x11, 0x22, 0x33, 0x44};
+	public static final byte[] commandFinisher = {(byte) 0x99, (byte) 0x98};
 	
 	public static MultiSample parse(byte[] frame) {
 		if (!Sensor.frameIsValid(frame)) {
@@ -46,6 +47,29 @@ public class Sensor {
 		SensorSample magnetometerSample = new SensorSample(Mx, My, Mz);
 		
 		return new MultiSample(accelerometerSample, magnetometerSample, gyroscopeSample);
+	}
+	
+	public static byte[] getSACommand(int freq) {
+		if (freq < 10 || freq > 200) { return samplingRate200HzCommand; }
+		
+		byte[] command = new byte[7];
+		command[0] = 0x53; // S
+		command[1] = 0x41; // A
+		command[5] = commandFinisher[0];
+		command[6] = commandFinisher[1];
+		
+		if (freq < 100) { // 2 digits
+			command[2] = 0x30;
+			command[3] = (byte) ((freq / 10) + 0x30);
+			command[4] = (byte) ((freq % 10) + 0x30);
+		}
+		else { // 3 digits
+			command[2] = (byte) ((freq / 100) + 0x30);
+			command[3] = (byte) ((freq / 10) % 10 + 0x30);
+			command[4] = (byte) ((freq % 10) + 0x30);
+		}
+		
+		return command;
 	}
 	
 	public static boolean isACK(byte[] message) {

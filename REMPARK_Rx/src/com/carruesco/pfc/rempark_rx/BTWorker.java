@@ -18,6 +18,7 @@ import android.util.Log;
 public class BTWorker extends Thread {
 	private String TAG = "BTWorker";
 	
+	// Buffer for the read operations (bytes)
 	private final int READ_BUFFER_SIZE = 512;
 	
 	// To update connection state when we start receiving data
@@ -36,6 +37,7 @@ public class BTWorker extends Thread {
 	private final int CONNECTED = 1;
 	private final int FAILED = 2;
 	
+	// Socket and streams
 	private BluetoothSocket mmSocket;
 	private InputStream mmInStream;
 	private OutputStream mmOutStream;
@@ -118,6 +120,10 @@ public class BTWorker extends Thread {
 					
 					// Parse frame
 					MultiSample sample = Sensor.parse(frame);
+					if (sample == null) {
+						Log.e(TAG, "Error getting data from frame");
+						continue;
+					}
 					
 					if (magnetometerIsCalibrating) {
 						magnetometerIsCalibrating = false;
@@ -126,7 +132,7 @@ public class BTWorker extends Thread {
 					sample.magnetometer.applyOffset(magnetometerOffset);
 					
 					// Broadcast sample
-					if (broadcastSamples && sample != null) { broadCastSample(sample); }
+					if (broadcastSamples) { broadCastSample(sample); }
 				}
 			}
 		} catch (IOException e) {return; }
@@ -153,12 +159,14 @@ public class BTWorker extends Thread {
     }
 	
 	private boolean setupSensor() {
+		int samplingRate = 10; // TODO: read from preferences
+		
 		// To read ACKs
         byte[] buffer = new byte[READ_BUFFER_SIZE];
         
         // Set sampling rate
         Log.i(TAG, "Setting sample rate");
-        write(Sensor.samplingRate200HzCommand);
+        write(Sensor.getSACommand(samplingRate));
         // Read ACK
 		read(buffer);
         if (!Sensor.isACK(buffer)) {
