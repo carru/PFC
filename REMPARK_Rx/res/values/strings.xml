@@ -105,5 +105,6 @@
     <string name="clear_favourites">Clear list of favourite devices</string>
     <string name="favourites_cleared">Favourites cleared</string>
     <string name="favourites_cleared_error">Error clearing favourites</string>
+    <string name="sampling_rate">Sampling rate</string>
 
 </resources>

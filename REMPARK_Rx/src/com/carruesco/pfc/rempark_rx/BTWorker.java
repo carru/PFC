@@ -159,13 +159,13 @@ public class BTWorker extends Thread {
     }
 	
 	private boolean setupSensor() {
-		int samplingRate = 10; // TODO: read from preferences
+		int samplingRate = Common.sharedPref.getInt("key_sampling_rate", 200);
 		
 		// To read ACKs
         byte[] buffer = new byte[READ_BUFFER_SIZE];
         
         // Set sampling rate
-        Log.i(TAG, "Setting sample rate");
+        Log.i(TAG, "Setting sample rate: " + samplingRate + " Hz");
         write(Sensor.getSACommand(samplingRate));
         // Read ACK
 		read(buffer);

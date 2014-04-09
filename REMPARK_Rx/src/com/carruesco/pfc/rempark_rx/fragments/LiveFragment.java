@@ -52,7 +52,6 @@ public class LiveFragment extends Fragment{
 		calibrateButton.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
 		    	if (Common.isConnected) {
-		    		//TODO
 		    		BTWorker.magnetometerIsCalibrating = true;
 		    	}
 		    }
