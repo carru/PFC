@@ -1,5 +1,7 @@
 package com.carruesco.pfc.rempark_rx.fragments;
 
+import java.text.DecimalFormat;
+
 import com.carruesco.pfc.rempark_rx.BTService;
 import com.carruesco.pfc.rempark_rx.BTWorker;
 import com.carruesco.pfc.rempark_rx.Common;
@@ -12,6 +14,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,15 +76,22 @@ public class LiveFragment extends Fragment{
 	}
 	
 	private void displayData(MultiSample sample) {
-			Ax.setText(Double.toString(sample.accelerometer.getX()));
-			Ay.setText(Double.toString(sample.accelerometer.getY()));
-			Az.setText(Double.toString(sample.accelerometer.getZ()));
-			Mx.setText(Double.toString(sample.magnetometer.getX()));
-			My.setText(Double.toString(sample.magnetometer.getY()));
-			Mz.setText(Double.toString(sample.magnetometer.getZ()));
-			Gx.setText(Double.toString(sample.gyroscope.getX()));
-			Gy.setText(Double.toString(sample.gyroscope.getY()));
-			Gz.setText(Double.toString(sample.gyroscope.getZ()));
+		DecimalFormat df = new DecimalFormat("0.0000");
+		
+		Ax.setText(df.format(sample.accelerometer.getX()));
+		Ay.setText(df.format(sample.accelerometer.getY()));
+		Az.setText(df.format(sample.accelerometer.getZ()));
+		
+		Gx.setText(df.format(sample.gyroscope.getX()));
+		Gy.setText(df.format(sample.gyroscope.getY()));
+		Gz.setText(df.format(sample.gyroscope.getZ()));
+		
+		df.applyPattern("0.000000"); // More decimals for the magnetometer
+		Mx.setText(df.format(sample.magnetometer.getX()));
+		My.setText(df.format(sample.magnetometer.getY()));
+		Mz.setText(df.format(sample.magnetometer.getZ()));
+		
+		Log.d("debug", "sample printed");
 	}
 	
 	private MultiSample getData(Intent intent) {
