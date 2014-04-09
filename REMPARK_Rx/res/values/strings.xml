@@ -56,8 +56,8 @@
     <string name="x">x:</string>
     <string name="y">y:</string>
     <string name="z">z:</string>
-    <string name="accelerometer_unit">g</string>
-    <string name="magnetometer_unit">uT</string>
+    <string name="accelerometer_unit">mg</string>
+    <string name="magnetometer_unit">V</string>
     <string name="gyroscope_unit">deg/s</string>
     <string name="calibrate">Calibrate</string>
     

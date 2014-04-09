@@ -1,10 +1,10 @@
 package com.carruesco.pfc.rempark_rx.fragments;
 
 import com.carruesco.pfc.rempark_rx.BTService;
+import com.carruesco.pfc.rempark_rx.BTWorker;
 import com.carruesco.pfc.rempark_rx.Common;
 import com.carruesco.pfc.rempark_rx.R;
-import com.carruesco.pfc.rempark_rx.SensorSample;
-
+import com.carruesco.pfc.rempark_rx.sensor.MultiSample;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -49,7 +49,8 @@ public class LiveFragment extends Fragment{
 		calibrateButton.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
 		    	if (Common.isConnected) {
-		    		Common.mService.calibrateMagnetometer();
+		    		//TODO
+		    		//Common.mService.calibrateMagnetometer();
 		    	}
 		    }
 		});
@@ -60,39 +61,32 @@ public class LiveFragment extends Fragment{
 	@Override
 	public void onPause() {
 		registerReceiver();
-		BTService.broadcastData = false;
+		BTWorker.broadcastSamples = false;
 		super.onPause();
 	}
 	
 	@Override
 	public void onResume() {
 		registerReciever();
-		BTService.broadcastData = true;
+		BTWorker.broadcastSamples = true;
 		super.onResume();
 	}
 	
-	private void displayData(SensorSample sample) {
-		if (sample.getName().equals(Common.mService.getAccelerometerName())) {
-			Ax.setText(Float.toString(sample.getX()));
-			Ay.setText(Float.toString(sample.getY()));
-			Az.setText(Float.toString(sample.getZ()));
-		}
-		else if (sample.getName().equals(Common.mService.getMagnetometerName())) {
-			Mx.setText(Float.toString(sample.getX()));
-			My.setText(Float.toString(sample.getY()));
-			Mz.setText(Float.toString(sample.getZ()));
-		}
-		else if (sample.getName().equals(Common.mService.getGyroscopeName())) {
-			Gx.setText(Float.toString(sample.getX()));
-			Gy.setText(Float.toString(sample.getY()));
-			Gz.setText(Float.toString(sample.getZ()));
-		}
+	private void displayData(MultiSample sample) {
+			Ax.setText(Double.toString(sample.accelerometer.getX()));
+			Ay.setText(Double.toString(sample.accelerometer.getY()));
+			Az.setText(Double.toString(sample.accelerometer.getZ()));
+			Mx.setText(Double.toString(sample.magnetometer.getX()));
+			My.setText(Double.toString(sample.magnetometer.getY()));
+			Mz.setText(Double.toString(sample.magnetometer.getZ()));
+			Gx.setText(Double.toString(sample.gyroscope.getX()));
+			Gy.setText(Double.toString(sample.gyroscope.getY()));
+			Gz.setText(Double.toString(sample.gyroscope.getZ()));
 	}
 	
-	private SensorSample getData(Intent intent) {
-    	float[] data = intent.getFloatArrayExtra(BTService.VALUE);
-        String sensorName = intent.getStringExtra(BTService.SENSOR_TYPE);
-        return new SensorSample(data, sensorName);
+	private MultiSample getData(Intent intent) {
+    	double[] data = intent.getDoubleArrayExtra(BTService.VALUE);
+        return new MultiSample(data);
     }
 	
 	private void registerReciever() {

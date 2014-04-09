@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.carruesco.pfc.rempark_rx.SensorSample;
+import com.carruesco.pfc.rempark_rx.sensor.SensorSample;
 
 import android.content.Context;
 import android.os.Environment;
@@ -90,17 +90,17 @@ public class SamplesLogger {
 			SensorSample gyroscopeSample = gyroscopeSamples.remove(0);
 			
 			try {
-				bufferedWriter.write(Float.toString(accelerometerSample.getX()) + ";" +
-									 Float.toString(accelerometerSample.getY()) + ";" +
-									 Float.toString(accelerometerSample.getZ()) + ";" +
+				bufferedWriter.write(Double.toString(accelerometerSample.getX()) + ";" +
+						Double.toString(accelerometerSample.getY()) + ";" +
+						Double.toString(accelerometerSample.getZ()) + ";" +
 									
-									 Float.toString(magnetometerSample.getX()) + ";" +
-									 Float.toString(magnetometerSample.getY()) + ";" +
-									 Float.toString(magnetometerSample.getZ()) + ";" +
+						Double.toString(magnetometerSample.getX()) + ";" +
+						Double.toString(magnetometerSample.getY()) + ";" +
+						Double.toString(magnetometerSample.getZ()) + ";" +
 									
-									 Float.toString(gyroscopeSample.getX()) + ";" +
-									 Float.toString(gyroscopeSample.getY()) + ";" +
-									 Float.toString(gyroscopeSample.getZ()) + ";\n");
+						Double.toString(gyroscopeSample.getX()) + ";" +
+						Double.toString(gyroscopeSample.getY()) + ";" +
+						Double.toString(gyroscopeSample.getZ()) + ";\n");
 				samplesCounter++;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

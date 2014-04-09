@@ -9,12 +9,11 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.format.Time;
 import android.util.Log;
 
 public class BTService extends Service {
-	private String TAG = "BTService";
+	//private String TAG = "BTService";
 	
 	private BluetoothSocket mmSocket;
 	
@@ -25,32 +24,19 @@ public class BTService extends Service {
     private SamplesLogger logger;
     private Time loggerStartTime = new Time();
 	
-	// Send a broadcast when the sensor starts sending data (connecting -> connected)
-	//private static boolean notifyIsConnected = false;
-	
-	// Sensors
-	private String accelerometer = "A";
-	private String magnetometer = "M";
-	private String gyroscope = "G";
-	/*private Accelerometer accelerometer = new Accelerometer();
-    private Magnetometer magnetometer = new Magnetometer();
-    private Gyroscope gyroscope = new Gyroscope();*/
     // Magnetometer calibration
-	private boolean magnetometerIsCalibrating = false;
-	private float[] calibrationOffset;
+	//private boolean magnetometerIsCalibrating = false;
 	
 	// Binder given to clients
     private final IBinder mBinder = new LocalBinder();
 
-    // Broadcast sensor data?
-    public static boolean broadcastData = false;
     // Broadcast types
     public final static String ACTION_DATA_AVAILABLE = "1";
     public final static String ACTION_CONNECTED      = "2";
     public final static String ACTION_DISCONNECTED   = "3";
     // Intents
     public final static String VALUE       = "4";
-    public final static String SENSOR_TYPE = "5";
+    //public final static String SENSOR_TYPE = "5";
     
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -116,11 +102,7 @@ public class BTService extends Service {
     public Time getLoggerStartTime() { return loggerStartTime; }
     
     public void calibrateMagnetometer() {
-    	magnetometerIsCalibrating = true;
-    }
-    
-    private void initializeCalibrationOffset() {
-    	calibrationOffset = new float[]{0, 0, 0};
+    	//magnetometerIsCalibrating = true;
     }
     
     public boolean connect() {
@@ -161,10 +143,7 @@ public class BTService extends Service {
 	    	try {
 				mmSocket.close();
 				Log.i("Service", "Socket closed");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			} catch (IOException e) { }
     	}
     }
     
@@ -237,7 +216,7 @@ public class BTService extends Service {
 		return null;
     }*/
     
-    private void broadcastNewSample(SensorSample sample) {
+    /*private void broadcastNewSample(SensorSample sample) {
     	final Intent intent = new Intent(ACTION_DATA_AVAILABLE);
     	intent.putExtra(VALUE, SensorSample.getDataVector(sample));  
         intent.putExtra(SENSOR_TYPE, sample.getName());
@@ -246,5 +225,5 @@ public class BTService extends Service {
     
     public String getAccelerometerName() { return accelerometer; }
     public String getMagnetometerName() { return magnetometer; }
-    public String getGyroscopeName() { return gyroscope; }
+    public String getGyroscopeName() { return gyroscope; }*/
 }
