@@ -21,6 +21,12 @@ public class SensorSample {
 		this.z = data[2];
 	}
 	
+	public SensorSample(SensorSample sample) {
+		this.x = sample.getX();
+		this.y = sample.getY();
+		this.z = sample.getZ();
+	}
+	
 	public double getX() { return x; }
 	public double getY() { return y; }
 	public double getZ() { return z; }

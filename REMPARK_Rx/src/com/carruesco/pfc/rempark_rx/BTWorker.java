@@ -127,7 +127,7 @@ public class BTWorker extends Thread {
 					
 					if (magnetometerIsCalibrating) {
 						magnetometerIsCalibrating = false;
-						magnetometerOffset = sample.magnetometer;
+						magnetometerOffset = new SensorSample(sample.magnetometer);
 					}
 					sample.magnetometer.applyOffset(magnetometerOffset);
 					

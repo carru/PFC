@@ -103,8 +103,6 @@ public class NumberPickerDialogPreference extends DialogPreference {
 		
 		// Update summary with current value
 		setSummary(Integer.toString(mValue) + " Hz");
-		
-		if (Common.isConnected) { Toast.makeText(getContext(), R.string.sampling_rate_warning, Toast.LENGTH_LONG).show(); }
 	}
 
 	@Override
@@ -116,6 +114,7 @@ public class NumberPickerDialogPreference extends DialogPreference {
 			int numberPickerValue = mNumberPicker.getValue();
 			if (callChangeListener(numberPickerValue)) {
 				setValue(numberPickerValue);
+				if (Common.isConnected) { Toast.makeText(getContext(), R.string.sampling_rate_warning, Toast.LENGTH_LONG).show(); }
 			}
 		}
 	}

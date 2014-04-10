@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,8 +88,6 @@ public class LiveFragment extends Fragment{
 		Mx.setText(df.format(sample.magnetometer.getX()));
 		My.setText(df.format(sample.magnetometer.getY()));
 		Mz.setText(df.format(sample.magnetometer.getZ()));
-		
-		Log.d("debug", "sample printed");
 	}
 	
 	private MultiSample getData(Intent intent) {
