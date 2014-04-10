@@ -138,7 +138,7 @@ public class BTWorker extends Thread {
 					
 					// Log samples
 					if (isLogging()) {
-						//TODO
+						logger.write(sample);
 					}
 					
 					// Broadcast sample
