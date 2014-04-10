@@ -122,14 +122,12 @@ public class MasterActivity extends Activity {
     }
 
     @Override
-    protected void onDestroy() {
-    	Log.d("Master", "onDestroy");
-    	
-    	// Stop service
+    public void onBackPressed() {
+    	// Disconnect as soon as user exists app (instead of doing it in onDestroy)
     	Intent intent = new Intent(this, BTService.class);
     	stopService(intent);
     	
-    	super.onDestroy();
+    	super.onBackPressed();
     }
     
     @Override

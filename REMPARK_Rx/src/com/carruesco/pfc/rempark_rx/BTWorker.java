@@ -106,7 +106,6 @@ public class BTWorker extends Thread {
 			while(true) {
 				if (interrupted()) { return; }
 				bytesRead = mmInStream.read(readBuffer);
-				//Log.d(TAG, "Read: " + bytesRead + " bytes");
 				
 				// Update connection state
 				if (notifyIsConnected) {
@@ -116,10 +115,10 @@ public class BTWorker extends Thread {
 				
 				// Add read bytes to list
 				for (i=0; i<bytesRead; i++) { rawBytes.add(readBuffer[i]); }
-				//Log.d(TAG, "rawBytes: " + rawBytes.size());
+				Log.d(TAG, "Bytes in the queue: " + rawBytes.size());
 				
 				// Do we have a full frame?
-				if (rawBytes.size()>=FRAME_SIZE) {
+				while (rawBytes.size()>=FRAME_SIZE) {
 					// Get frame from ArrayList
 					for (i=0; i<FRAME_SIZE; i++) { frame[i] = rawBytes.remove(0); }
 					
