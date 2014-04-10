@@ -13,11 +13,16 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.format.Time;
 import android.util.Log;
 
 public class BTWorker extends Thread {
 	private String TAG = "BTWorker";
 	
+	// Log writer
+    private SamplesLogger logger;
+    private Time loggerStartTime = new Time();
+    
 	// Buffer for the read operations (bytes)
 	private final int READ_BUFFER_SIZE = 512;
 	
@@ -131,6 +136,11 @@ public class BTWorker extends Thread {
 					}
 					sample.magnetometer.applyOffset(magnetometerOffset);
 					
+					// Log samples
+					if (isLogging()) {
+						//TODO
+					}
+					
 					// Broadcast sample
 					if (broadcastSamples) { broadCastSample(sample); }
 				}
@@ -215,4 +225,44 @@ public class BTWorker extends Thread {
 			break;
 		}
 	}
+	
+	public boolean startLogger() {
+    	// Prepare log writer
+    	logger = new SamplesLogger(context);
+    	if (!logger.isReady()) { return false; }
+    	loggerStartTime.setToNow();
+    	return true;
+    }
+    
+    public boolean startLogger(String fileName) {
+    	// Prepare log writer
+    	logger = new SamplesLogger(context, fileName);
+    	if (!logger.isReady()) { return false; }
+    	loggerStartTime.setToNow();
+    	return true;
+    }
+    
+    public void stopLogger() {
+    	if (logger != null) {
+    		logger.close();
+    		logger = null;
+    	}
+    }
+    
+    public boolean isLogging() {
+    	if (logger == null) { return false; }
+    	else { return logger.isReady(); }
+    }
+    
+    public String getLoggerFileName() {
+    	if (logger == null) { return null; }
+    	else { return logger.getFileName(); }
+    }
+    
+    public int getLoggerNumberOfSamples() {
+    	if (logger == null) { return -1; }
+    	else { return logger.getNumberOfWrittenSamples(); }
+    }
+    
+    public Time getLoggerStartTime() { return loggerStartTime; }
 }

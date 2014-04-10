@@ -17,12 +17,8 @@ public class BTService extends Service {
 	
 	private BluetoothSocket mmSocket;
 	
-	// Worker thread to manage BT connection
+	// Worker thread to manage BT connection and logger
 	private BTWorker worker;
-	
-	// Log writer
-    private SamplesLogger logger;
-    private Time loggerStartTime = new Time();
 	
 	// Binder given to clients
     private final IBinder mBinder = new LocalBinder();
@@ -59,47 +55,37 @@ public class BTService extends Service {
     }
     
     public boolean startLogger() {
-    	// Prepare log writer
-    	logger = new SamplesLogger(this);
-    	if (!logger.isReady()) { return false; }
-    	loggerStartTime.setToNow();
-    	return true;
+    	if (worker == null) { return false; }
+    	return worker.startLogger();
     }
     
     public boolean startLogger(String fileName) {
-    	// Prepare log writer
-    	logger = new SamplesLogger(this, fileName);
-    	if (!logger.isReady()) { return false; }
-    	loggerStartTime.setToNow();
-    	return true;
+    	if (worker == null) { return false; }
+    	return worker.startLogger(fileName);
     }
     
     public void stopLogger() {
-    	if (logger != null) {
-    		logger.close();
-    		logger = null;
-    	}
+    	if (worker != null) { worker.stopLogger(); }
     }
     
     public boolean isLogging() {
-    	if (logger == null) { return false; }
-    	else { return logger.isReady(); }
+    	if (worker == null) { return false; }
+    	return worker.isLogging();
     }
     
     public String getLoggerFileName() {
-    	if (logger == null) { return null; }
-    	else { return logger.getFileName(); }
+    	if (worker == null) { return null; }
+    	return worker.getLoggerFileName();
     }
     
     public int getLoggerNumberOfSamples() {
-    	if (logger == null) { return -1; }
-    	else { return logger.getNumberOfWrittenSamples(); }
+    	if (worker == null) { return -1; }
+    	return worker.getLoggerNumberOfSamples();
     }
     
-    public Time getLoggerStartTime() { return loggerStartTime; }
-    
-    public void calibrateMagnetometer() {
-    	//magnetometerIsCalibrating = true;
+    public Time getLoggerStartTime() {
+    	if (worker == null) { return null; }
+    	return worker.getLoggerStartTime();
     }
     
     public boolean connect() {
@@ -129,10 +115,7 @@ public class BTService extends Service {
     	closeSocket();
         
     	// Close logger if active
-        if (logger != null) {
-        	logger.close();
-        	logger = null;
-        }
+        stopLogger();
     }
     
     private void closeSocket() {
@@ -143,84 +126,4 @@ public class BTService extends Service {
 			} catch (IOException e) { }
     	}
     }
-    
-    /*private SensorSample extractSampleAndLogIt(BluetoothGattCharacteristic characteristic) {
-    	// From which sensor?
-        if (characteristic.getUuid().toString().equalsIgnoreCase(accelerometer.getDataUUID())) {
-        	// Accelerometer
-        	accelerometer.isSendingData = true;
-        	
-            float[] data = accelerometer.parse(characteristic);
-            SensorSample sample = new SensorSample(data, accelerometer.getName());
-            
-            // Are we logging samples?
-            if (logger != null) {
-            	// Log samples only if all sensors are ready
-            	boolean sensorsAreAllReady = accelerometer.isSendingData &&
-            							 magnetometer.isSendingData &&
-            							 gyroscope.isSendingData;
-            	if (logger.isReady() && sensorsAreAllReady) { logger.writeAccelerometerSample(sample); }
-            }
-            
-            return sample;
-        }
-        else if (characteristic.getUuid().toString().equalsIgnoreCase(magnetometer.getDataUUID())) {
-        	// Magnetometer
-        	magnetometer.isSendingData = true;
-        	
-        	float[] data = magnetometer.parse(characteristic);
-        	if (magnetometerIsCalibrating) {
-        		calibrationOffset[0] = data[0];
-        		calibrationOffset[1] = data[1];
-        		calibrationOffset[2] = data[2];
-        		magnetometerIsCalibrating = false;
-        	}
-        	data[0] = data[0] - calibrationOffset[0];
-    		data[1] = data[1] - calibrationOffset[1];
-    		data[2] = data[2] - calibrationOffset[2];
-        	SensorSample sample = new SensorSample(data, magnetometer.getName());
-        	
-        	// Are we logging samples?
-            if (logger != null) {
-            	// Log samples only if all sensors are ready
-            	boolean sensorsAreAllReady = accelerometer.isSendingData &&
-            							 magnetometer.isSendingData &&
-            							 gyroscope.isSendingData;
-            	if (logger.isReady() && sensorsAreAllReady) { logger.writeMagnetometerSample(sample); }
-            }
-        	
-        	return sample;
-        }
-        else if (characteristic.getUuid().toString().equalsIgnoreCase(gyroscope.getDataUUID())) {
-        	// Gyroscope
-        	gyroscope.isSendingData = true;
-        	
-        	float[] data = gyroscope.parse(characteristic);
-        	SensorSample sample = new SensorSample(data, gyroscope.getName());
-        	
-        	// Are we logging samples?
-            if (logger != null) {
-            	// Log samples only if all sensors are ready
-            	boolean sensorsAreAllReady = accelerometer.isSendingData &&
-            							 magnetometer.isSendingData &&
-            							 gyroscope.isSendingData;
-            	if (logger.isReady() && sensorsAreAllReady) { logger.writeGyroscopeSample(sample); }
-            }
-        	
-        	return sample;
-        }
-        
-		return null;
-    }*/
-    
-    /*private void broadcastNewSample(SensorSample sample) {
-    	final Intent intent = new Intent(ACTION_DATA_AVAILABLE);
-    	intent.putExtra(VALUE, SensorSample.getDataVector(sample));  
-        intent.putExtra(SENSOR_TYPE, sample.getName());
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-    }
-    
-    public String getAccelerometerName() { return accelerometer; }
-    public String getMagnetometerName() { return magnetometer; }
-    public String getGyroscopeName() { return gyroscope; }*/
 }

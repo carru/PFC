@@ -4,10 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-
-import com.carruesco.pfc.rempark_rx.sensor.SensorSample;
-
+import com.carruesco.pfc.rempark_rx.sensor.MultiSample;
 import android.content.Context;
 import android.os.Environment;
 import android.text.format.Time;
@@ -18,11 +15,6 @@ import android.text.format.Time;
 public class SamplesLogger {
 	private Context context;
 	private BufferedWriter bufferedWriter;
-	
-	// ArrayLists for sensor samples
-	private ArrayList<SensorSample> accelerometerSamples;
-	private ArrayList<SensorSample> magnetometerSamples;
-	private ArrayList<SensorSample> gyroscopeSamples;
 	
 	// To check if it is ready and working (can write)
 	private boolean isReady;
@@ -46,11 +38,6 @@ public class SamplesLogger {
 		// Check if filesystem is writable
 		if (!isExternalStorageWritable()) { return; }
 		
-		// Initialize lists
-		accelerometerSamples = new ArrayList<SensorSample>();
-		magnetometerSamples = new ArrayList<SensorSample>();
-		gyroscopeSamples = new ArrayList<SensorSample>();
-		
 		// Create log file
 		createLogFile();
 	}
@@ -66,47 +53,25 @@ public class SamplesLogger {
 		}
 	}
 	
-	public void writeAccelerometerSample(SensorSample sample) {
-		accelerometerSamples.add(sample);
-		write();
-	}
-	
-	public void writeMagnetometerSample(SensorSample sample) {
-		magnetometerSamples.add(sample);
-		write();
-	}
-	
-	public void writeGyroscopeSample(SensorSample sample) {
-		gyroscopeSamples.add(sample);
-		write();
-	}
-	
-	private synchronized void write() {
-		// Do we have all the samples of each sensor?
-		// Assumes same sampling rate for all sensors!
-		if (!accelerometerSamples.isEmpty() && !magnetometerSamples.isEmpty() && !gyroscopeSamples.isEmpty()) {
-			SensorSample accelerometerSample = accelerometerSamples.remove(0);
-			SensorSample magnetometerSample = magnetometerSamples.remove(0);
-			SensorSample gyroscopeSample = gyroscopeSamples.remove(0);
-			
-			try {
-				bufferedWriter.write(Double.toString(accelerometerSample.getX()) + ";" +
-						Double.toString(accelerometerSample.getY()) + ";" +
-						Double.toString(accelerometerSample.getZ()) + ";" +
-									
-						Double.toString(magnetometerSample.getX()) + ";" +
-						Double.toString(magnetometerSample.getY()) + ";" +
-						Double.toString(magnetometerSample.getZ()) + ";" +
-									
-						Double.toString(gyroscopeSample.getX()) + ";" +
-						Double.toString(gyroscopeSample.getY()) + ";" +
-						Double.toString(gyroscopeSample.getZ()) + ";\n");
-				samplesCounter++;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	public synchronized void write(MultiSample sample) {
+		try {
+			bufferedWriter.write(Double.toString(sample.accelerometer.getX()) + ";" 
+					+ Double.toString(sample.accelerometer.getY()) + ";"
+					+ Double.toString(sample.accelerometer.getZ()) + ";" +
+
+					Double.toString(sample.magnetometer.getX()) + ";"
+					+ Double.toString(sample.magnetometer.getY()) + ";"
+					+ Double.toString(sample.magnetometer.getZ()) + ";" +
+
+					Double.toString(sample.gyroscope.getX()) + ";"
+					+ Double.toString(sample.gyroscope.getY()) + ";"
+					+ Double.toString(sample.gyroscope.getZ()) + ";\n");
+			samplesCounter++;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+
 	}
 	
 	// Checks if external storage is available for read and write
