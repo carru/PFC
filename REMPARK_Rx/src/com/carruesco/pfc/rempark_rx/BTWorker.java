@@ -115,7 +115,6 @@ public class BTWorker extends Thread {
 				
 				// Add read bytes to list
 				for (i=0; i<bytesRead; i++) { rawBytes.add(readBuffer[i]); }
-				Log.d(TAG, "Bytes in the queue: " + rawBytes.size());
 				
 				// Do we have a full frame?
 				while (rawBytes.size()>=FRAME_SIZE) {
