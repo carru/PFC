@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
     private static final int REQUEST_ENABLE_BT = 1;
     
 	private BluetoothAdapter mBluetoothAdapter;
-	
+	// això són uns canvis
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
