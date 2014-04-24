@@ -61,14 +61,14 @@ public class LiveFragment extends Fragment{
 	
 	@Override
 	public void onPause() {
-		registerReceiver();
+		unregisterReceiver();
 		BTWorker.broadcastSamples = false;
 		super.onPause();
 	}
 	
 	@Override
 	public void onResume() {
-		registerReciever();
+		registerReceiver();
 		BTWorker.broadcastSamples = true;
 		super.onResume();
 	}
@@ -95,12 +95,12 @@ public class LiveFragment extends Fragment{
         return new MultiSample(data);
     }
 	
-	private void registerReciever() {
+	private void registerReceiver() {
     	LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver,
     			makeGattUpdateIntentFilter());
     }
     
-    private void registerReceiver() {
+    private void unregisterReceiver() {
     	LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
     }
     
