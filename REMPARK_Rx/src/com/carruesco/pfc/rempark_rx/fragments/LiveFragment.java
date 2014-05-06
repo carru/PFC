@@ -24,7 +24,7 @@ public class LiveFragment extends Fragment{
 	//private Button calibrateButton;
 	
 	// To format sample values
-	DecimalFormat df = new DecimalFormat("0.0000");
+	DecimalFormat decimalFormat = new DecimalFormat("0.0000");
 	
 	private void getUiReferences(View v) {
 		Ax = (TextView) v.findViewById(R.id.live_accelerometer_x);
@@ -75,19 +75,19 @@ public class LiveFragment extends Fragment{
 	}
 	
 	private void displayData(MultiSample sample) {
-		df.applyPattern("0.0000");
-		Ax.setText(df.format(sample.accelerometer.getX()));
-		Ay.setText(df.format(sample.accelerometer.getY()));
-		Az.setText(df.format(sample.accelerometer.getZ()));
+		decimalFormat.applyPattern("0.0000");
+		Ax.setText(decimalFormat.format(sample.accelerometer.getX()));
+		Ay.setText(decimalFormat.format(sample.accelerometer.getY()));
+		Az.setText(decimalFormat.format(sample.accelerometer.getZ()));
 		
-		Gx.setText(df.format(sample.gyroscope.getX()));
-		Gy.setText(df.format(sample.gyroscope.getY()));
-		Gz.setText(df.format(sample.gyroscope.getZ()));
+		Gx.setText(decimalFormat.format(sample.gyroscope.getX()));
+		Gy.setText(decimalFormat.format(sample.gyroscope.getY()));
+		Gz.setText(decimalFormat.format(sample.gyroscope.getZ()));
 		
-		df.applyPattern("0.000000"); // More decimals for the magnetometer
-		Mx.setText(df.format(sample.magnetometer.getX()));
-		My.setText(df.format(sample.magnetometer.getY()));
-		Mz.setText(df.format(sample.magnetometer.getZ()));
+		decimalFormat.applyPattern("0.000000"); // More decimals for the magnetometer
+		Mx.setText(decimalFormat.format(sample.magnetometer.getX()));
+		My.setText(decimalFormat.format(sample.magnetometer.getY()));
+		Mz.setText(decimalFormat.format(sample.magnetometer.getZ()));
 	}
 	
 	private MultiSample getData(Intent intent) {

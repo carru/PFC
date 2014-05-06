@@ -22,7 +22,8 @@ public class BTWorker extends Thread {
     private Time loggerStartTime = new Time();
     
 	// Buffer for the read operations (bytes)
-	private final int READ_BUFFER_SIZE = 512;
+	private final int READ_BUFFER_SIZE = 10240;
+	private boolean multipleSamples = false;
 	
 	// To update connection state when we start receiving data
 	private boolean notifyIsConnected;
@@ -33,7 +34,7 @@ public class BTWorker extends Thread {
 	public static boolean broadcastSamples = false;
 	// Samples counter
 	private int count;
-	// Rate at which to send samples to the live data fragment in Hz
+	// Rate at which to send samples to the live data fragment in Hz (not accurate)
 	private final int LIVE_DATA_REFRESH_RATE = 20;
 	private int samplingRate = 200;
 	
@@ -98,6 +99,7 @@ public class BTWorker extends Thread {
 		// Buffer to read data
 		byte[] readBuffer = new byte[READ_BUFFER_SIZE];
 		int bytesRead;
+		multipleSamples = false;
 		
 		// ArrayList to store read bytes
 		ArrayList<Byte> rawBytes = new ArrayList<Byte>();
@@ -113,9 +115,10 @@ public class BTWorker extends Thread {
 			while(true) {
 				if (interrupted()) { Log.d(TAG, "BTWorker has been interrupted"); return; }
 				bytesRead = mmInStream.read(readBuffer);
+				if (bytesRead > FRAME_SIZE) { multipleSamples = true; }
 				
 				// DEBUG
-				Log.d(TAG, "Read " + bytesRead + " bytes");
+				//Log.d(TAG, "Read " + bytesRead + " bytes");
 				
 				// Update connection state
 				if (notifyIsConnected) {
@@ -139,19 +142,20 @@ public class BTWorker extends Thread {
 						continue;
 					}
 					
-					/*if (magnetometerIsCalibrating) {
-						magnetometerIsCalibrating = false;
-						magnetometerOffset = new SensorSample(sample.magnetometer);
-					}
-					sample.magnetometer.applyOffset(magnetometerOffset);*/
+//					if (magnetometerIsCalibrating) {
+//						magnetometerIsCalibrating = false;
+//						magnetometerOffset = new SensorSample(sample.magnetometer);
+//					}
+//					sample.magnetometer.applyOffset(magnetometerOffset);
 					
 					// Log samples
 					if (isLogging()) {
 						logger.write(sample);
 					}
 					
-					// Broadcast sample
-					if (broadcastSamples) {
+					// Broadcast sample. Don't broadcast when there were too many samples at once
+					if (multipleSamples) { multipleSamples = false; }
+					else if (broadcastSamples) {
 						count++;
 						if (count >= samplingRate/LIVE_DATA_REFRESH_RATE) {
 							count = 0;
