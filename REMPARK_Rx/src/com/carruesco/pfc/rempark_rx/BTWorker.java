@@ -30,9 +30,14 @@ public class BTWorker extends Thread {
 	private boolean notifyIsConnected;
 	
 	// Context to send broadcasts
-	Context context;
+	private Context context;
 	// Broadcast samples?
 	public static boolean broadcastSamples = false;
+	// Samples counter
+	private int count;
+	// Rate at which to send samples to the live data fragment in Hz
+	private final int LIVE_DATA_REFRESH_RATE = 20;
+	private int samplingRate = 200;
 	
 	// Magnetometer calibration
 	public static boolean magnetometerIsCalibrating = false;
@@ -102,10 +107,17 @@ public class BTWorker extends Thread {
 		// Frame of FRAME_SIZE bytes
 		byte[] frame = new byte[FRAME_SIZE];
 		
+		// Received sample
+		MultiSample sample = new MultiSample();
+		count = 0;
+		
 		try {
 			while(true) {
-				if (interrupted()) { return; }
+				if (interrupted()) { Log.d(TAG, "BTWorker has been interrupted"); return; }
 				bytesRead = mmInStream.read(readBuffer);
+				
+				// DEBUG
+				Log.d(TAG, "Read " + bytesRead + " bytes");
 				
 				// Update connection state
 				if (notifyIsConnected) {
@@ -122,7 +134,8 @@ public class BTWorker extends Thread {
 					for (i=0; i<FRAME_SIZE; i++) { frame[i] = rawBytes.remove(0); }
 					
 					// Parse frame
-					MultiSample sample = Sensor.parse(frame);
+					//sample = Sensor.parse(frame);
+					Sensor.parse(frame, sample);
 					if (sample == null) {
 						Log.e(TAG, "Error getting data from frame");
 						continue;
@@ -140,10 +153,16 @@ public class BTWorker extends Thread {
 					}
 					
 					// Broadcast sample
-					if (broadcastSamples) { broadCastSample(sample); }
+					if (broadcastSamples) {
+						count++;
+						if (count >= samplingRate/LIVE_DATA_REFRESH_RATE) {
+							count = 0;
+							broadCastSample(sample);
+						}
+					}
 				}
 			}
-		} catch (IOException e) {return; }
+		} catch (IOException e) { Log.d(TAG, "Exception in readLoop()"); return; }
 	}
 	
 	private void broadCastSample(MultiSample sample) {
@@ -167,7 +186,7 @@ public class BTWorker extends Thread {
     }
 	
 	private boolean setupSensor() {
-		int samplingRate = Common.sharedPref.getInt("key_sampling_rate", 200);
+		samplingRate = Common.sharedPref.getInt("key_sampling_rate", 200);
 		
 		// To read ACKs
         byte[] buffer = new byte[READ_BUFFER_SIZE];

@@ -17,6 +17,7 @@ public class Sensor {
 	public static final byte[] frameStart = {0x11, 0x22, 0x33, 0x44};
 	public static final byte[] commandFinisher = {(byte) 0x99, (byte) 0x98};
 	
+	// Parse frame and return a new MultiSample
 	public static MultiSample parse(byte[] frame) {
 		if (!Sensor.frameIsValid(frame)) {
 			Log.e(TAG, "Invalid frame!");
@@ -47,6 +48,35 @@ public class Sensor {
 		SensorSample magnetometerSample = new SensorSample(Mx, My, Mz);
 		
 		return new MultiSample(accelerometerSample, magnetometerSample, gyroscopeSample);
+	}
+	
+	// Parse frame and return the extracted sample in the given MultiSample
+	public static void parse(byte[] frame, MultiSample sample) {
+		if (!Sensor.frameIsValid(frame)) {
+			Log.e(TAG, "Invalid frame!");
+			Log.e(TAG, Integer.toHexString(frame[0]) + 
+					Integer.toHexString(frame[1]) + 
+					Integer.toHexString(frame[2]) + 
+					Integer.toHexString(frame[3]));
+			sample = null;
+			return;
+		}
+		
+		// Accelerometer
+		ByteBuffer bBuffer = ByteBuffer.wrap(frame, 4, 28);
+		sample.accelerometer.setX(bBuffer.getShort() * 2.9412);
+		sample.accelerometer.setY(bBuffer.getShort() * 2.9412);
+		sample.accelerometer.setZ(bBuffer.getShort() * 2.9412);
+		
+		// Gyroscope
+		sample.gyroscope.setX(((bBuffer.getShort() * 3.3/4096) - 1.35) * 2000);
+		sample.gyroscope.setY(((bBuffer.getShort() * 3.3/4096) - 1.35) * 2000);
+		sample.gyroscope.setZ(((bBuffer.getShort() * 3.3/4096) - 1.35) * 2000);
+		
+		// Magnetometer
+		sample.magnetometer.setX(bBuffer.getShort() * 3.3/4096);
+		sample.magnetometer.setY(bBuffer.getShort() * 3.3/4096);
+		sample.magnetometer.setZ(bBuffer.getShort() * 3.3/4096);
 	}
 	
 	public static byte[] getSACommand(int freq) {

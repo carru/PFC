@@ -19,6 +19,11 @@ public class MultiSample {
 		gyroscope = new SensorSample(data[6], data[7], data[8]);
 	}
 	
+	public MultiSample() {
+		// Empty sample
+		this(new double[]{0,0,0, 0,0,0, 0,0,0});
+	}
+	
 	public static double[] getDataVector(MultiSample sample) {
 		return new double[]{ sample.accelerometer.getX(), 
 				sample.accelerometer.getY(), 

@@ -25,6 +25,9 @@ public class LiveFragment extends Fragment{
 	private TextView Ax,Ay,Az,Mx,My,Mz,Gx,Gy,Gz;
 	private Button calibrateButton;
 	
+	// To format sample values
+	DecimalFormat df = new DecimalFormat("0.0000");
+	
 	private void getUiReferences(View v) {
 		Ax = (TextView) v.findViewById(R.id.live_accelerometer_x);
 		Ay = (TextView) v.findViewById(R.id.live_accelerometer_y);
@@ -74,8 +77,7 @@ public class LiveFragment extends Fragment{
 	}
 	
 	private void displayData(MultiSample sample) {
-		DecimalFormat df = new DecimalFormat("0.0000");
-		
+		df.applyPattern("0.0000");
 		Ax.setText(df.format(sample.accelerometer.getX()));
 		Ay.setText(df.format(sample.accelerometer.getY()));
 		Az.setText(df.format(sample.accelerometer.getZ()));
