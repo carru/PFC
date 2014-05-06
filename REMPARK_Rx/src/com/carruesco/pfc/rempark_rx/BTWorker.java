@@ -7,8 +7,6 @@ import java.util.ArrayList;
 
 import com.carruesco.pfc.rempark_rx.sensor.MultiSample;
 import com.carruesco.pfc.rempark_rx.sensor.Sensor;
-import com.carruesco.pfc.rempark_rx.sensor.SensorSample;
-
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
@@ -40,8 +38,8 @@ public class BTWorker extends Thread {
 	private int samplingRate = 200;
 	
 	// Magnetometer calibration
-	public static boolean magnetometerIsCalibrating = false;
-	private SensorSample magnetometerOffset = new SensorSample(0, 0, 0);
+	//public static boolean magnetometerIsCalibrating = false;
+	//private SensorSample magnetometerOffset = new SensorSample(0, 0, 0);
 	
 	// Connection states
 	private final int CONNECTED = 1;
@@ -141,11 +139,11 @@ public class BTWorker extends Thread {
 						continue;
 					}
 					
-					if (magnetometerIsCalibrating) {
+					/*if (magnetometerIsCalibrating) {
 						magnetometerIsCalibrating = false;
 						magnetometerOffset = new SensorSample(sample.magnetometer);
 					}
-					sample.magnetometer.applyOffset(magnetometerOffset);
+					sample.magnetometer.applyOffset(magnetometerOffset);*/
 					
 					// Log samples
 					if (isLogging()) {

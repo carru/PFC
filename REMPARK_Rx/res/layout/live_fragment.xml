@@ -173,11 +173,11 @@
     		
             <Space style="@style/SensorNameSeparatorSpace" />
             
-            <Button
-		        android:id="@+id/calibrate_button"
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:text="@string/calibrate" />
+<!--             <Button -->
+<!-- 		        android:id="@+id/calibrate_button" -->
+<!-- 		        android:layout_width="match_parent" -->
+<!-- 		        android:layout_height="wrap_content" -->
+<!-- 		        android:text="@string/calibrate" /> -->
             
         </LinearLayout>
     		

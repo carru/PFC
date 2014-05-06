@@ -4,7 +4,6 @@ import java.text.DecimalFormat;
 
 import com.carruesco.pfc.rempark_rx.BTService;
 import com.carruesco.pfc.rempark_rx.BTWorker;
-import com.carruesco.pfc.rempark_rx.Common;
 import com.carruesco.pfc.rempark_rx.R;
 import com.carruesco.pfc.rempark_rx.sensor.MultiSample;
 import android.app.Fragment;
@@ -17,13 +16,12 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 public class LiveFragment extends Fragment{
 	// UI references
 	private TextView Ax,Ay,Az,Mx,My,Mz,Gx,Gy,Gz;
-	private Button calibrateButton;
+	//private Button calibrateButton;
 	
 	// To format sample values
 	DecimalFormat df = new DecimalFormat("0.0000");
@@ -39,7 +37,7 @@ public class LiveFragment extends Fragment{
 		Gy = (TextView) v.findViewById(R.id.live_gyroscope_y);
 		Gz = (TextView) v.findViewById(R.id.live_gyroscope_z);
 		
-		calibrateButton = (Button) v.findViewById(R.id.calibrate_button);
+		//calibrateButton = (Button) v.findViewById(R.id.calibrate_button);
 	}
 	
 	// Empty constructor required for fragment subclasses
@@ -51,13 +49,13 @@ public class LiveFragment extends Fragment{
 		
 		getUiReferences(rootView);
 		
-		calibrateButton.setOnClickListener(new View.OnClickListener() {
+		/*calibrateButton.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
 		    	if (Common.isConnected) {
 		    		BTWorker.magnetometerIsCalibrating = true;
 		    	}
 		    }
-		});
+		});*/
 		
 		return rootView;
 	}
