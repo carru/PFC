@@ -92,18 +92,13 @@ public class BTWorker extends Thread {
 	}
 	
 	private void readLoop() {
-		final int FRAME_SIZE = 32;
 		int i;
 		
-		// Buffer to read data
-		byte[] readBuffer = new byte[READ_BUFFER_SIZE];
-		int bytesRead;
-		
 		// ArrayList to store read bytes
-		ArrayList<Byte> rawBytes = new ArrayList<Byte>();
+		ArrayList<Byte> rawBytes = new ArrayList<Byte>(2*Sensor.FRAME_LENGTH);
 		
 		// Frame of FRAME_SIZE bytes
-		byte[] frame = new byte[FRAME_SIZE];
+		byte[] frame = new byte[Sensor.FRAME_LENGTH];
 		
 		// Received sample
 		MultiSample sample = new MultiSample();
@@ -112,10 +107,9 @@ public class BTWorker extends Thread {
 		try {
 			while(true) {
 				if (interrupted()) { Log.d(TAG, "BTWorker has been interrupted"); return; }
-				bytesRead = mmInStream.read(readBuffer);
 				
-				// DEBUG
-				//Log.d(TAG, "Read " + bytesRead + " bytes");
+				// Add read bytes to list
+				rawBytes.add((byte) mmInStream.read());
 				
 				// Update connection state
 				if (notifyIsConnected) {
@@ -123,16 +117,12 @@ public class BTWorker extends Thread {
 					updateConnectionState(CONNECTED);
 				}
 				
-				// Add read bytes to list
-				for (i=0; i<bytesRead; i++) { rawBytes.add(readBuffer[i]); }
-				
 				// Do we have a full frame?
-				while (rawBytes.size()>=FRAME_SIZE) {
+				if (rawBytes.size()>=Sensor.FRAME_LENGTH) {
 					// Get frame from ArrayList
-					for (i=0; i<FRAME_SIZE; i++) { frame[i] = rawBytes.remove(0); }
+					for (i=0; i<Sensor.FRAME_LENGTH; i++) { frame[i] = rawBytes.remove(0); }
 					
 					// Parse frame
-					//sample = Sensor.parse(frame);
 					Sensor.parse(frame, sample);
 					if (sample == null) {
 						Log.e(TAG, "Error getting data from frame");
@@ -150,7 +140,7 @@ public class BTWorker extends Thread {
 						logger.write(sample);
 					}
 					
-					// Broadcast sample. Don't broadcast when there were too many samples at once
+					// Broadcast sample
 					if (broadcastSamples) {
 						count++;
 						if (count >= samplingRate/LIVE_DATA_REFRESH_RATE) {
@@ -259,8 +249,11 @@ public class BTWorker extends Thread {
     
     public void stopLogger() {
     	if (logger != null) {
-    		logger.close();
+    		SamplesLogger temp = logger;
+    		// Make it null before closing so that the readLoop() doesn't
+    		// try to write after closing and before making null
     		logger = null;
+    		temp.close();
     	}
     }
     
