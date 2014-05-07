@@ -1,202 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    style="@style/SmallMargins" >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
     <LinearLayout
-        android:id="@+id/capture_status_card"
-        android:background="@drawable/card_no_border"
-        android:layout_width="match_parent"
-    	android:layout_height="wrap_content" >
-    	
-        <RelativeLayout
-            style="@style/SmallMargins"
-            android:layout_width="wrap_content"
-    		android:layout_height="wrap_content" >
-    		
-            <TextView
-        		android:id="@+id/capture_TextView1"
-        		android:layout_width="wrap_content"
-        		android:layout_height="wrap_content"
-        		android:textAppearance="?android:attr/textAppearanceMedium"
-        		android:text="@string/state" />
-
-    		<TextView
-        		android:id="@+id/capture_connection_state"
-       			android:layout_width="match_parent"
-        		android:layout_height="wrap_content"
-        		android:layout_toRightOf="@id/capture_TextView1"
-        		android:gravity="right"
-        		android:textAppearance="?android:attr/textAppearanceMedium"
-        		android:text="@string/disconnected" />
-
-    		<TextView
-        		android:id="@+id/capture_TextView2"
-        		android:layout_width="wrap_content"
-        		android:layout_height="wrap_content"
-        		android:layout_below="@id/capture_TextView1"
-        		android:textAppearance="?android:attr/textAppearanceMedium"
-        		android:text="@string/device_name" />
-    		
-    		<TextView
-        		android:id="@+id/capture_device_name"
-       			android:layout_width="match_parent"
-        		android:layout_height="wrap_content"
-        		android:layout_toRightOf="@id/capture_TextView2"
-        		android:layout_below="@id/capture_TextView1"
-        		android:gravity="right"
-        		android:textAppearance="?android:attr/textAppearanceMedium" />
-    		
-    		<TextView
-        		android:id="@+id/capture_TextView3"
-        		android:layout_width="wrap_content"
-        		android:layout_height="wrap_content"
-        		android:layout_below="@id/capture_TextView2"
-        		android:textAppearance="?android:attr/textAppearanceMedium"
-        		android:text="@string/device_address" />
-    		
-    		<TextView
-        		android:id="@+id/capture_device_address"
-       			android:layout_width="match_parent"
-        		android:layout_height="wrap_content"
-        		android:layout_toRightOf="@id/capture_TextView3"
-        		android:layout_below="@id/capture_TextView2"
-        		android:gravity="right"
-        		android:textAppearance="?android:attr/textAppearanceMedium" />
-    		
-    		<TextView
-    		    android:id="@+id/capture_TextView4"
-    		    android:layout_width="wrap_content"
-    		    android:layout_height="wrap_content"
-    		    android:layout_below="@id/capture_TextView3"
-    		    android:layout_marginTop="16dp"
-    		    android:text="@string/logging_status"
-    		    android:textAppearance="?android:attr/textAppearanceMedium" />
-    		
-    		<TextView
-        		android:id="@+id/capture_logger_status"
-       			android:layout_width="match_parent"
-        		android:layout_height="wrap_content"
-        		android:layout_toRightOf="@id/capture_TextView4"
-        		android:layout_below="@id/capture_TextView3"
-        		android:layout_marginTop="16dp"
-        		android:gravity="right"
-        		android:text="@string/not_logging"
-        		android:textAppearance="?android:attr/textAppearanceMedium" />
-            
-    		<Button
-    		    android:id="@+id/capture_logger_button"
-    		    android:layout_below="@id/capture_TextView4"
-    		    android:text="@string/start_log"
-       			android:layout_width="match_parent"
-        		android:layout_height="wrap_content" />
-    		
-        </RelativeLayout>
-    		
-    </LinearLayout>
-    
-    <LinearLayout
+        style="@style/SmallMargins"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_small_vertical_margin"
-        android:background="@drawable/card_no_border" >
-        
-        <RelativeLayout
-            style="@style/SmallMargins"
-            android:layout_width="wrap_content"
-    		android:layout_height="wrap_content" >
-    		
-		        <TextView
-		            android:id="@+id/capture_more_info"
-		            android:layout_width="match_parent"
-		            android:layout_height="wrap_content"
-		            android:layout_marginBottom="8dp"
-		            android:gravity="center"
-		            android:text="@string/more_info"
-		            android:textAppearance="?android:attr/textAppearanceLarge" />
-		        
-		        <TextView
-		            android:id="@+id/capture_TextView8"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:layout_below="@id/capture_more_info"
-		            android:text="@string/log_filename"
-		            android:textAppearance="?android:attr/textAppearanceMedium" />
-		        
-		        <TextView
-		            android:id="@+id/capture_log_filename"
-		            android:layout_width="fill_parent"
-		            android:layout_height="wrap_content"
-		            android:layout_below="@id/capture_more_info"
-		            android:layout_toRightOf="@+id/capture_TextView8"
-		            android:gravity="right"
-		            android:textAppearance="?android:attr/textAppearanceMedium" />
-		        
-		        <TextView
-		            android:id="@+id/capture_TextView5"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:layout_below="@id/capture_log_filename"
-		            android:text="@string/start_time"
-		            android:textAppearance="?android:attr/textAppearanceMedium" />
-		        
-		        <TextView
-		            android:id="@+id/capture_start_time"
-		            android:layout_width="fill_parent"
-		            android:layout_height="wrap_content"
-		            android:layout_below="@id/capture_log_filename"
-		            android:layout_toRightOf="@id/capture_TextView5"
-		            android:gravity="right"
-		            android:textAppearance="?android:attr/textAppearanceMedium" />
-		        
-		        <TextView
-		            android:id="@+id/capture_TextView6"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:layout_below="@id/capture_start_time"
-		            android:text="@string/runtime"
-		            android:textAppearance="?android:attr/textAppearanceMedium" />
-		        
-		        <TextView
-		            android:id="@+id/capture_runtime"
-		            android:layout_width="fill_parent"
-		            android:layout_height="wrap_content"
-		            android:layout_below="@id/capture_start_time"
-		            android:layout_toRightOf="@id/capture_TextView6"
-		            android:gravity="right"
-		            android:textAppearance="?android:attr/textAppearanceMedium" />
-		        
-		        <TextView
-		            android:id="@+id/capture_TextView7"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:layout_below="@id/capture_runtime"
-		            android:text="@string/captured_samples"
-		            android:textAppearance="?android:attr/textAppearanceMedium" />
-		        
-		        <TextView
-		            android:id="@+id/capture_number_of_samples"
-		            android:layout_width="fill_parent"
-		            android:layout_height="wrap_content"
-		            android:layout_below="@id/capture_runtime"
-		            android:layout_marginBottom="24dp"
-		            android:layout_toRightOf="@id/capture_TextView7"
-		            android:gravity="right"
-		            android:textAppearance="?android:attr/textAppearanceMedium" />
-		        
-		        <TextView
-		        	android:id="@+id/capture_TextView9"
-		       		android:layout_width="match_parent"
-		        	android:layout_height="wrap_content"
-		        	android:layout_below="@id/capture_number_of_samples"
-		        	android:text="@string/file_location"
-		        	android:gravity="center"
-		        	android:textAppearance="?android:attr/textAppearanceSmall" />
-        
-		</RelativeLayout>
-		
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/capture_status_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/card_no_border" >
+
+            <RelativeLayout
+                style="@style/SmallMargins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/capture_TextView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/state"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/capture_connection_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/capture_TextView1"
+                    android:gravity="right"
+                    android:text="@string/disconnected"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/capture_TextView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/capture_TextView1"
+                    android:text="@string/device_name"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/capture_device_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/capture_TextView1"
+                    android:layout_toRightOf="@id/capture_TextView2"
+                    android:gravity="right"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/capture_TextView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/capture_TextView2"
+                    android:text="@string/device_address"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/capture_device_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/capture_TextView2"
+                    android:layout_toRightOf="@id/capture_TextView3"
+                    android:gravity="right"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/capture_TextView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/capture_TextView3"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/logging_status"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/capture_logger_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/capture_TextView3"
+                    android:layout_marginTop="16dp"
+                    android:layout_toRightOf="@id/capture_TextView4"
+                    android:gravity="right"
+                    android:text="@string/not_logging"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Button
+                    android:id="@+id/capture_logger_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/capture_TextView4"
+                    android:text="@string/start_log" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_small_vertical_margin"
+            android:background="@drawable/card_no_border" >
+
+            <RelativeLayout
+                style="@style/SmallMargins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/capture_more_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center"
+                    android:text="@string/more_info"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <TextView
+                    android:id="@+id/capture_TextView8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/capture_more_info"
+                    android:text="@string/log_filename"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/capture_log_filename"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/capture_more_info"
+                    android:layout_toRightOf="@+id/capture_TextView8"
+                    android:gravity="right"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/capture_TextView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/capture_log_filename"
+                    android:text="@string/start_time"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/capture_start_time"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/capture_log_filename"
+                    android:layout_toRightOf="@id/capture_TextView5"
+                    android:gravity="right"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/capture_TextView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/capture_start_time"
+                    android:text="@string/runtime"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/capture_runtime"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/capture_start_time"
+                    android:layout_toRightOf="@id/capture_TextView6"
+                    android:gravity="right"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/capture_TextView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/capture_runtime"
+                    android:text="@string/captured_samples"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/capture_number_of_samples"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/capture_runtime"
+                    android:layout_marginBottom="24dp"
+                    android:layout_toRightOf="@id/capture_TextView7"
+                    android:gravity="right"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/capture_TextView9"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/capture_number_of_samples"
+                    android:gravity="center"
+                    android:text="@string/file_location"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>
