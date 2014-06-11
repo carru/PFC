@@ -16,16 +16,16 @@
             android:title="@string/sampling_rate"
             custom:min="10" />
 
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="key_capture_in_background"
-            android:summary="@string/capture_in_background_summary"
-            android:title="@string/capture_in_background" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="key_foreground"
-            android:summary="@string/service_in_foreground_summary"
-            android:title="@string/service_in_foreground" />
+<!--         <CheckBoxPreference -->
+<!--             android:defaultValue="false" -->
+<!--             android:key="key_capture_in_background" -->
+<!--             android:summary="@string/capture_in_background_summary" -->
+<!--             android:title="@string/capture_in_background" /> -->
+<!--         <CheckBoxPreference -->
+<!--             android:defaultValue="false" -->
+<!--             android:key="key_foreground" -->
+<!--             android:summary="@string/service_in_foreground_summary" -->
+<!--             android:title="@string/service_in_foreground" /> -->
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/category_favourites" >
         <CheckBoxPreference
